@@ -1,0 +1,4 @@
+{
+  "elixir.pathToElixirLS": "~/.elixir-ls/release/language_server.sh",
+  "npm.binPath": "Users/alestsvil/.nvm/versions/node/v16.13.2/bin/npm"
+}
