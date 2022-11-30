@@ -1,3 +1,5 @@
+" nvim/neovide configuration created and maintained by DioDredd
+" plugins list
 call plug#begin('~/.nvim/plugin')
     Plug 'scrooloose/nerdtree'
     Plug 'gpanders/editorconfig.nvim' 
@@ -16,9 +18,11 @@ call plug#begin('~/.nvim/plugin')
     Plug 'nvim-lua/plenary.nvim'
     Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
     Plug 'airblade/vim-gitgutter'
+    Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
+    Plug 'neovim/nvim-lspconfig'
 call plug#end()
-let g:coc_node_path = '/Users/alestsvil/.nvm/versions/node/v16.13.2/bin/node'
-"let g:coc_node_path = trim(system('which node'))
+
+"<------- General configuraiton ------->
 set number
 set relativenumber
 set clipboard=unnamed
@@ -29,16 +33,8 @@ set tabstop=4
 set softtabstop=4
 set expandtab
 set shiftwidth=2
+"colorscheme tokyonight-storm
 colorscheme gruvbox
-"use { "catppuccin/nvim", as = "catppuccin" }
-"colorscheme catppuccin " catppuccin-latte, catppuccin-frappe, catppuccin-macchiato, catppuccin-mocha
-"vim.cmd.colorscheme "catppuccin"
-
-" GoTo code navigation.
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
 
 " Find files using Telescope command-line sugar.
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
@@ -48,42 +44,79 @@ nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 
 nmap <silent> <leader>m :History<CR>
 
-map <leader>r :NERDTreeFind<cr>
-
-" use <tab> for trigger completion and navigate to the next complete item
-function! CheckBackspace() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
+" <------- CoC general and autocomplete configuration ------->
+" list of CoC extension that would be automatically installed on 1st sturtup
+let g:coc_global_extensions = [
+      \'coc-eslint',
+      \'coc-tsserver',
+      \'coc-rust-analyzer',
+      \'coc-markdownlint',
+      \'coc-highlight',
+      \'coc-explorer',
+      \'coc-json', 
+      \'coc-git'
+      \]
 
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
+inoremap <expr> <space> coc#pum#visible() ? coc#_select_confirm() : "\<space>"
+function! CheckBackspace() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+let g:coc_snippet_next = '<tab>'
+" inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+" Insert <tab> when previous text is space, refresh completion if not.
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+  \ coc#pum#visible() ? coc#pum#next(1):
+  \ CheckBackspace() ? "\<Tab>" :
+  \ coc#refresh()
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+
 " Use <c-space> to trigger completion.
 if has('nvim')
   inoremap <silent><expr> <c-space> coc#refresh()
 else
   inoremap <silent><expr> <c-@> coc#refresh()
 endif
-let NERDTreeShowHidden=1
 command! -nargs=0 Prettier :CocCommand prettier.forceFormatDocument
 
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" <------ NERDTree configuration ------>
+let NERDTreeShowHidden=1
+map <leader>r :NERDTreeFind<cr>
+
+" <------ Neovide config section ------>
 if exists("g:neovide")
-    set guifont=Iosevka\ Custom:h18
+    set guifont=Iosevka\ Custom:h17
     "let g:transparency = 0.9
     let g:neovide_scroll_animation_length = 0.3
     let g:neovide_transparency = 0.85
     let g:neovide_remember_window_size = v:true
 endif
 
+" <------ MacOS-specific settings section ------->
+"let g:coc_node_path = '/Users/alestsvil/.nvm/versions/node/v16.13.2/bin/node'
+"let g:coc_node_path = trim(system('which node'))
+
+" <------ Lua script configuraiton until the EOF ------>
 lua <<EOF
 vim.opt.list = true
 
+require'lspconfig'.tsserver.setup{}
+
+require('nvim-treesitter.configs').setup {
+  ensure_installed = { "c", "cpp", "lua", "rust", "javascript", "typescript" },
+  highlight = { enable = true },
+  indent = { enable = true }
+}
+ 
 require("indent_blankline").setup {
     use_treesitter = true,
     space_char_blankline = " ",
@@ -163,7 +196,7 @@ end
 
 require('lualine').setup {
   options = {
-    theme = theme,
+    theme = 'gruvbox',
     component_separators = '',
     section_separators = { left = '', right = '' },
   },
