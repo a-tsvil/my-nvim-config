@@ -33,8 +33,9 @@ set tabstop=4
 set softtabstop=4
 set expandtab
 set shiftwidth=2
-"colorscheme tokyonight-storm
-colorscheme gruvbox
+colorscheme tokyonight-night
+"colorscheme gruvbox
+"colorscheme nightfox
 
 " Find files using Telescope command-line sugar.
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
@@ -94,7 +95,7 @@ map <leader>r :NERDTreeFind<cr>
 
 " <------ Neovide config section ------>
 if exists("g:neovide")
-    set guifont=Iosevka\ Custom:h17
+    set guifont=Iosevka\ Custom:h15
     "let g:transparency = 0.9
     let g:neovide_scroll_animation_length = 0.3
     let g:neovide_transparency = 0.85
@@ -196,7 +197,7 @@ end
 
 require('lualine').setup {
   options = {
-    theme = 'gruvbox',
+    theme = 'tokyonight',
     component_separators = '',
     section_separators = { left = '', right = '' },
   },
