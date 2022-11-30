@@ -20,6 +20,8 @@ call plug#begin('~/.nvim/plugin')
     Plug 'airblade/vim-gitgutter'
     Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
     Plug 'neovim/nvim-lspconfig'
+    " Plug 'arcticicestudio/nord-vim'
+    Plug 'shaunsingh/nord.nvim', { 'commit': '78f5f001709b5b321a35dcdc44549ef93185e024' }
 call plug#end()
 
 "<------- General configuraiton ------->
@@ -33,9 +35,18 @@ set tabstop=4
 set softtabstop=4
 set expandtab
 set shiftwidth=2
-colorscheme tokyonight-night
+
+let g:nord_contrast = v:false
+let g:nord_borders = v:true
+let g:nord_disable_background = v:false
+let g:nord_italic = v:false
+let g:nord_uniform_diff_background = v:true
+let g:nord_bold = v:false
+let g:nord_cursorline_transparent = v:true
+
+colorscheme nord
+"colorscheme tokyonight-night
 "colorscheme gruvbox
-"colorscheme nightfox
 
 " Find files using Telescope command-line sugar.
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
@@ -197,7 +208,7 @@ end
 
 require('lualine').setup {
   options = {
-    theme = 'tokyonight',
+    theme = 'nord',
     component_separators = '',
     section_separators = { left = '', right = '' },
   },
