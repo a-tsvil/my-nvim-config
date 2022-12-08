@@ -1,4 +1,18 @@
 {
   "elixir.pathToElixirLS": "~/.elixir-ls/release/language_server.sh",
-  "npm.binPath": "Users/alestsvil/.nvm/versions/node/v16.13.2/bin/npm"
+  "languageserver": {
+    "ccls": {
+      "command": "ccls",
+      "filetypes": ["c", "cpp", "cuda", "objc", "objcpp"],
+      "rootPatterns": [".ccls-root", "compile_commands.json"],
+      "initializationOptions": {
+        "cache": {
+          "directory": ".ccls-cache"
+        },
+        "client": {
+          "snippetSupport": true
+        }
+      }
+    }
+  }
 }

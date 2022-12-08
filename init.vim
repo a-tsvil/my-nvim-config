@@ -22,6 +22,7 @@ call plug#begin('~/.nvim/plugin')
     Plug 'neovim/nvim-lspconfig'
     " Plug 'arcticicestudio/nord-vim'
     Plug 'shaunsingh/nord.nvim', { 'commit': '78f5f001709b5b321a35dcdc44549ef93185e024' }
+    " Plug 'EdenEast/nightfox.nvim'
 call plug#end()
 
 "<------- General configuraiton ------->
@@ -87,6 +88,7 @@ set sessionoptions-=options  " Don't save options
 let g:coc_global_extensions = [
       \'coc-eslint',
       \'coc-tsserver',
+      \'coc-prettier',
       \'coc-rust-analyzer',
       \'coc-markdownlint',
       \'coc-highlight',
@@ -98,7 +100,7 @@ let g:coc_global_extensions = [
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
-inoremap <expr> <space> coc#pum#visible() ? coc#_select_confirm() : "\<space>"
+inoremap <expr> <cr> coc#pum#visible() ? coc#_select_confirm() : "\<cr>"
 function! CheckBackspace() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
@@ -150,7 +152,7 @@ vim.opt.list = true
 require'lspconfig'.tsserver.setup{}
 
 require('nvim-treesitter.configs').setup {
-  ensure_installed = { "c", "cpp", "lua", "rust", "javascript", "typescript" },
+  ensure_installed = { "c", "cpp", "lua", "rust", "javascript", "typescript", "yaml"},
   highlight = { enable = true },
   indent = { enable = true }
 }
