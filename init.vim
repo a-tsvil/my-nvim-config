@@ -3,7 +3,6 @@
 call plug#begin('~/.nvim/plugin')
     Plug 'scrooloose/nerdtree'
     Plug 'gpanders/editorconfig.nvim' 
-    Plug 'morhetz/gruvbox'
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
     Plug 'elixir-lsp/coc-elixir', {'do': 'yarn install && yarn prepack'}
     Plug 'elixir-editors/vim-elixir'
@@ -12,17 +11,22 @@ call plug#begin('~/.nvim/plugin')
     " If you want to have icons in your statusline choose one of these
     Plug 'kyazdani42/nvim-web-devicons'
     Plug 'ryanoasis/vim-devicons'
-    Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+    Plug 'nvim-treesitter/nvim-treesitter', {'commit': 'a2d7e78b0714a0dc066416100b7398d3f0941c23', 'do': ':TSUpdate'}
     Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
     Plug 'junegunn/fzf.vim'
     Plug 'nvim-lua/plenary.nvim'
     Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
-    Plug 'airblade/vim-gitgutter'
-    Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
     Plug 'neovim/nvim-lspconfig'
-    " Plug 'arcticicestudio/nord-vim'
-    Plug 'shaunsingh/nord.nvim', { 'commit': '78f5f001709b5b321a35dcdc44549ef93185e024' }
-    " Plug 'EdenEast/nightfox.nvim'
+    Plug 'airblade/vim-gitgutter'
+    Plug 'folke/todo-comments.nvim'
+    " Colorschemes plugins
+    Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
+    " Plug 'shaunsingh/nord.nvim', { 'commit': '78f5f001709b5b321a35dcdc44549ef93185e024' }
+    Plug 'morhetz/gruvbox'
+    Plug 'EdenEast/nightfox.nvim'
+    Plug 'arcticicestudio/nord-vim'
+    Plug 'tpope/vim-fugitive'
+    Plug 'chrisbra/Colorizer'
 call plug#end()
 
 "<------- General configuraiton ------->
@@ -45,9 +49,10 @@ let g:nord_uniform_diff_background = v:true
 let g:nord_bold = v:false
 let g:nord_cursorline_transparent = v:true
 
-colorscheme nord
+"colorscheme nord
 "colorscheme tokyonight-night
 "colorscheme gruvbox
+colorscheme nightfox
 
 " Find files using Telescope command-line sugar.
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
@@ -145,6 +150,8 @@ endif
 "let g:coc_node_path = '/Users/alestsvil/.nvm/versions/node/v16.13.2/bin/node'
 "let g:coc_node_path = trim(system('which node'))
 
+let g:colorizer_auto_filetype='css,html,js,ts,svelte'
+
 " <------ Lua script configuraiton until the EOF ------>
 lua <<EOF
 vim.opt.list = true
@@ -152,16 +159,16 @@ vim.opt.list = true
 require'lspconfig'.tsserver.setup{}
 
 require('nvim-treesitter.configs').setup {
-  ensure_installed = { "c", "cpp", "lua", "rust", "javascript", "typescript", "yaml"},
+  ensure_installed = { "c", "cpp", "lua", "rust", "javascript", "typescript", "yaml", "vim" },
   highlight = { enable = true },
   indent = { enable = true }
 }
  
 require("indent_blankline").setup {
-    use_treesitter = true,
-    space_char_blankline = " ",
-    show_current_context = true,
-    show_current_context_start = true,
+  use_treesitter = true,
+  space_char_blankline = " ",
+  show_current_context = true,
+  show_current_context_start = true,
 }
 
 local colors = {
@@ -236,7 +243,7 @@ end
 
 require('lualine').setup {
   options = {
-    theme = 'nord',
+    theme = 'nightfox',
     component_separators = '',
     section_separators = { left = '', right = '' },
   },
@@ -287,5 +294,11 @@ require('lualine').setup {
     lualine_c = { '%f %y %m' },
     lualine_x = {},
   },
+}
+
+require("todo-comments").setup {
+  -- your configuration comes here
+  -- or leave it empty to use the default settings
+  -- refer to the configuration section below
 }
 EOF

@@ -14,5 +14,6 @@
         }
       }
     }
-  }
+  },
+  "svelte.enable-ts-plugin": true
 }
