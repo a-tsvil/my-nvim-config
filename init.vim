@@ -40,6 +40,7 @@ set tabstop=4
 set softtabstop=4
 set expandtab
 set shiftwidth=2
+set cursorline
 
 let g:nord_contrast = v:false
 let g:nord_borders = v:true
@@ -85,8 +86,10 @@ autocmd VimLeave * NERDTreeClose
 autocmd VimLeave * call SaveSess()
 autocmd VimEnter * nested call RestoreSess()
 autocmd VimEnter * NERDTree
-
 set sessionoptions-=options  " Don't save options
+
+" NERDTree focus mapping
+nnoremap <leader>nf :NERDTreeFind<CR>
 
 " <------- CoC general and autocomplete configuration ------->
 " list of CoC extension that would be automatically installed on 1st sturtup
