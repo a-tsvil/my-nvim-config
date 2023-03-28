@@ -155,6 +155,8 @@ endif
 
 let g:colorizer_auto_filetype='css,html,js,ts,svelte'
 
+map rf :%! rustfmt <CR>
+
 " <------ Lua script configuraiton until the EOF ------>
 lua <<EOF
 vim.opt.list = true
