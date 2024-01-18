@@ -11,7 +11,8 @@ call plug#begin('~/.nvim/plugin')
     " If you want to have icons in your statusline choose one of these
     Plug 'kyazdani42/nvim-web-devicons'
     Plug 'ryanoasis/vim-devicons'
-    Plug 'nvim-treesitter/nvim-treesitter', {'commit': 'a2d7e78b0714a0dc066416100b7398d3f0941c23', 'do': ':TSUpdate'}
+    Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
+    " Plug 'nvim-treesitter/nvim-treesitter', {'commit': 'a2d7e78b0714a0dc066416100b7398d3f0941c23', 'do': ':TSUpdate'}
     Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
     Plug 'junegunn/fzf.vim'
     Plug 'nvim-lua/plenary.nvim'
@@ -27,6 +28,10 @@ call plug#begin('~/.nvim/plugin')
     Plug 'arcticicestudio/nord-vim'
     Plug 'tpope/vim-fugitive'
     Plug 'chrisbra/Colorizer'
+    Plug 'hashivim/vim-terraform'
+    Plug 'tpope/vim-surround'
+    Plug 'wellle/context.vim'
+    Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 call plug#end()
 
 "<------- General configuraiton ------->
@@ -139,7 +144,7 @@ map <leader>r :NERDTreeFind<cr>
 
 " <------ Neovide config section ------>
 if exists("g:neovide")
-    set guifont=Iosevka\ Custom:h15
+    set guifont=Iosevka:h19
     "let g:transparency = 0.9
     let g:neovide_scroll_animation_length = 0.3
     let g:neovide_transparency = 0.85
@@ -152,24 +157,54 @@ endif
 
 let g:colorizer_auto_filetype='css,html,js,ts,svelte'
 
+" <------ Temporary fix for the CoC breaking VIM's Visual Select Feature ------>
+"inoremap <s-v> :CocDisable<s-v>:CocEnable
+
 " <------ Lua script configuraiton until the EOF ------>
 lua <<EOF
 vim.opt.list = true
-
 require'lspconfig'.tsserver.setup{}
 
 require('nvim-treesitter.configs').setup {
-  ensure_installed = { "c", "cpp", "lua", "rust", "javascript", "typescript", "yaml", "vim" },
+  ensure_installed = { "lua", "rust", "javascript", "typescript", "yaml", "vim" },
   highlight = { enable = true },
   indent = { enable = true }
 }
- 
-require("indent_blankline").setup {
-  use_treesitter = true,
-  space_char_blankline = " ",
-  show_current_context = true,
-  show_current_context_start = true,
+
+local highlight = {
+    "RainbowRed",
+    "RainbowYellow",
+    "RainbowBlue",
+    "RainbowOrange",
+    "RainbowGreen",
+    "RainbowViolet",
+    "RainbowCyan",
+    "CurrentScope",
 }
+
+local hooks = require "ibl.hooks"
+-- create the highlight groups in the highlight setup hook, so they are reset
+-- every time the colorscheme changes
+hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
+    vim.api.nvim_set_hl(0, "RainbowRed", { fg = "#E06C75" })
+    vim.api.nvim_set_hl(0, "RainbowYellow", { fg = "#E5C07B" })
+    vim.api.nvim_set_hl(0, "RainbowBlue", { fg = "#61AFEF" })
+    vim.api.nvim_set_hl(0, "RainbowOrange", { fg = "#D19A66" })
+    vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#98C379" })
+    vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#C678DD" })
+    vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
+    vim.api.nvim_set_hl(0, "CurrentScope", { fg = "#A784DB" })
+end)
+
+require("ibl").setup({ 
+  indent = { highlight = highlight },
+  scope = { 
+    enabled = true,
+    include = { 
+       node_type = { ["*"] = { "*" } },
+    }
+  },
+})
 
 local colors = {
   red = '#ca1243',
