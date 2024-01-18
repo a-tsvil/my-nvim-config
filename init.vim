@@ -45,6 +45,7 @@ set tabstop=4
 set softtabstop=4
 set expandtab
 set shiftwidth=2
+set cursorline
 
 let g:nord_contrast = v:false
 let g:nord_borders = v:true
@@ -90,8 +91,10 @@ autocmd VimLeave * NERDTreeClose
 autocmd VimLeave * call SaveSess()
 autocmd VimEnter * nested call RestoreSess()
 autocmd VimEnter * NERDTree
-
 set sessionoptions-=options  " Don't save options
+
+" NERDTree focus mapping
+nnoremap <leader>nf :NERDTreeFind<CR>
 
 " <------- CoC general and autocomplete configuration ------->
 " list of CoC extension that would be automatically installed on 1st sturtup
@@ -159,6 +162,7 @@ let g:colorizer_auto_filetype='css,html,js,ts,svelte'
 
 " <------ Temporary fix for the CoC breaking VIM's Visual Select Feature ------>
 "inoremap <s-v> :CocDisable<s-v>:CocEnable
+map rf :%! rustfmt <CR>
 
 " <------ Lua script configuraiton until the EOF ------>
 lua <<EOF
