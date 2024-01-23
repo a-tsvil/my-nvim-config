@@ -33,6 +33,7 @@ call plug#begin('~/.nvim/plugin')
     Plug 'wellle/context.vim'
     Plug 'mg979/vim-visual-multi', {'branch': 'master'}
     " Plug 'wfxr/minimap.vim'
+    Plug 'rust-lang/rust.vim'
 call plug#end()
 
 "<------- General configuraiton ------->
@@ -47,6 +48,8 @@ set softtabstop=4
 set expandtab
 set shiftwidth=2
 set cursorline
+set list
+set listchars=tab:›\ ,lead:⋅,trail:⋅
 
 let g:nord_contrast = v:false
 let g:nord_borders = v:true
@@ -141,6 +144,20 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window
+nnoremap <silent> K :call ShowDocumentation()<CR>
+
+function! ShowDocumentation()
+  if CocAction('hasProvider', 'hover')
+    call CocActionAsync('doHover')
+  else
+    call feedkeys('K', 'in')
+  endif
+endfunction
+
+" Highlight the symbol and its references when holding the cursor
+autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " <------ NERDTree configuration ------>
 let NERDTreeShowHidden=1
