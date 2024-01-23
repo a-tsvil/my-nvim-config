@@ -32,6 +32,7 @@ call plug#begin('~/.nvim/plugin')
     Plug 'tpope/vim-surround'
     Plug 'wellle/context.vim'
     Plug 'mg979/vim-visual-multi', {'branch': 'master'}
+    " Plug 'wfxr/minimap.vim'
 call plug#end()
 
 "<------- General configuraiton ------->
@@ -155,7 +156,7 @@ if exists("g:neovide")
 endif
 
 " <------ MacOS-specific settings section ------->
-"let g:coc_node_path = '/Users/alestsvil/.nvm/versions/node/v16.13.2/bin/node'
+let g:coc_node_path = '/Users/alestsvil/.nvm/versions/node/v18.15.0/bin/node'
 "let g:coc_node_path = trim(system('which node'))
 
 let g:colorizer_auto_filetype='css,html,js,ts,svelte'
@@ -163,6 +164,10 @@ let g:colorizer_auto_filetype='css,html,js,ts,svelte'
 " <------ Temporary fix for the CoC breaking VIM's Visual Select Feature ------>
 "inoremap <s-v> :CocDisable<s-v>:CocEnable
 map rf :%! rustfmt <CR>
+
+" <------ Minimap config ------>
+" let g:minimap_width = 10
+" let g:minimap_auto_start = 1
 
 " <------ Lua script configuraiton until the EOF ------>
 lua <<EOF
