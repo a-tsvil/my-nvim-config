@@ -165,15 +165,15 @@ map <leader>r :NERDTreeFind<cr>
 
 " <------ Neovide config section ------>
 if exists("g:neovide")
-    set guifont=Iosevka:h19
+    set guifont=Iosevka\ Custom:h14
     "let g:transparency = 0.9
-    let g:neovide_scroll_animation_length = 0.3
+    let g:neovide_scroll_animation_length = 0.35
     let g:neovide_transparency = 0.85
     let g:neovide_remember_window_size = v:true
 endif
 
 " <------ MacOS-specific settings section ------->
-let g:coc_node_path = '/Users/alestsvil/.nvm/versions/node/v18.15.0/bin/node'
+let g:coc_node_path = '/home/diodredd/.nvm/versions/node/v18.15.0/bin/node'
 "let g:coc_node_path = trim(system('which node'))
 
 let g:colorizer_auto_filetype='css,html,js,ts,svelte'
@@ -190,6 +190,7 @@ map rf :%! rustfmt <CR>
 lua <<EOF
 vim.opt.list = true
 require'lspconfig'.tsserver.setup{}
+require'lspconfig'.terraformls.setup{}
 
 require('nvim-treesitter.configs').setup {
   ensure_installed = { "lua", "rust", "javascript", "typescript", "yaml", "vim" },
