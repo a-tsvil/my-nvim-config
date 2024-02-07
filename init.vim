@@ -34,6 +34,7 @@ call plug#begin('~/.nvim/plugin')
     Plug 'mg979/vim-visual-multi', {'branch': 'master'}
     " Plug 'wfxr/minimap.vim'
     Plug 'rust-lang/rust.vim'
+    Plug 'pmizio/typescript-tools.nvim' 
 call plug#end()
 
 "<------- General configuraiton ------->
@@ -165,11 +166,12 @@ map <leader>r :NERDTreeFind<cr>
 
 " <------ Neovide config section ------>
 if exists("g:neovide")
-    set guifont=Iosevka\ Custom:h14
+    set guifont=Iosevka:h14
     "let g:transparency = 0.9
     let g:neovide_scroll_animation_length = 0.35
     let g:neovide_transparency = 0.85
     let g:neovide_remember_window_size = v:true
+    let g:neovide_refresh_rate = 2000
 endif
 
 " <------ MacOS-specific settings section ------->
@@ -189,8 +191,36 @@ map rf :%! rustfmt <CR>
 " <------ Lua script configuraiton until the EOF ------>
 lua <<EOF
 vim.opt.list = true
-require'lspconfig'.tsserver.setup{}
 require'lspconfig'.terraformls.setup{}
+require'lspconfig'.tsserver.setup {
+  settings = {
+    typescript = {
+      inlayHints = {
+        includeInlayParameterNameHints = "all", -- 'none' | 'literals' | 'all'
+        includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+        includeInlayVariableTypeHints = true,
+        includeInlayFunctionParameterTypeHints = true,
+        includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+        includeInlayPropertyDeclarationTypeHints = true,
+        includeInlayFunctionLikeReturnTypeHints = true,
+        includeInlayEnumMemberValueHints = true,
+      },
+    },
+    javascript = {
+      inlayHints = {
+        includeInlayParameterNameHints = "all", -- 'none' | 'literals' | 'all'
+        includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+        includeInlayVariableTypeHints = true,
+        includeInlayFunctionParameterTypeHints = true,
+        includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+        includeInlayPropertyDeclarationTypeHints = true,
+        includeInlayFunctionLikeReturnTypeHints = true,
+        includeInlayEnumMemberValueHints = true,
+      },
+    },
+  },
+}
+require'lspconfig'.rust_analyzer.setup {}
 
 require('nvim-treesitter.configs').setup {
   ensure_installed = { "lua", "rust", "javascript", "typescript", "yaml", "vim" },
