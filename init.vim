@@ -16,7 +16,7 @@ call plug#begin('~/.nvim/plugin')
     Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
     Plug 'junegunn/fzf.vim'
     Plug 'nvim-lua/plenary.nvim'
-    Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
+    Plug 'nvim-telescope/telescope.nvim' , { 'tag': '0.1.4' }
     Plug 'neovim/nvim-lspconfig'
     Plug 'airblade/vim-gitgutter'
     Plug 'folke/todo-comments.nvim'
@@ -34,12 +34,15 @@ call plug#begin('~/.nvim/plugin')
     Plug 'mg979/vim-visual-multi', {'branch': 'master'}
     " Plug 'wfxr/minimap.vim'
     Plug 'rust-lang/rust.vim'
+    Plug 'prisma/vim-prisma'
+    Plug 'bluz71/vim-nightfly-colors', { 'as': 'nightfly' }
+    Plug 'overcache/NeoSolarized'
 call plug#end()
 
 "<------- General configuraiton ------->
 set number
 set relativenumber
-set clipboard=unnamed
+set clipboard+=unnamedplus
 set nowrap
 set showmatch
 set ignorecase
@@ -62,7 +65,9 @@ let g:nord_cursorline_transparent = v:true
 "colorscheme nord
 "colorscheme tokyonight-night
 "colorscheme gruvbox
-colorscheme nightfox
+"colorscheme nightfox
+"colorscheme nightfly
+colorscheme NeoSolarized
 
 " Find files using Telescope command-line sugar.
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
@@ -111,7 +116,8 @@ let g:coc_global_extensions = [
       \'coc-highlight',
       \'coc-explorer',
       \'coc-json', 
-      \'coc-git'
+      \'coc-git',
+      \'coc-prisma',
       \]
 
 " Use tab for trigger completion with characters ahead and navigate.
@@ -188,6 +194,7 @@ map rf :%! rustfmt <CR>
 
 " <------ Lua script configuraiton until the EOF ------>
 lua <<EOF
+vim.opt.fillchars = {eob = " "}
 vim.opt.list = true
 require'lspconfig'.tsserver.setup{}
 require'lspconfig'.terraformls.setup{}
