@@ -20,7 +20,13 @@
       "filetypes": ["terraform", "tf"],
       "initializationOptions": {},
       "settings": {}
+    },
+    "gleam": {
+      "command": "gleam",
+      "args": ["lsp"],
+      "filetypes": ["gleam"]
     }
   },
-  "svelte.enable-ts-plugin": true
+  "svelte.enable-ts-plugin": true,
+  "outline.splitCommand": "belowright 40vs"
 }

@@ -4,7 +4,7 @@ call plug#begin('~/.nvim/plugin')
     Plug 'scrooloose/nerdtree'
     Plug 'gpanders/editorconfig.nvim' 
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
-    Plug 'elixir-lsp/coc-elixir', {'do': 'yarn install && yarn prepack'}
+    " Plug 'elixir-lsp/coc-elixir', {'do': 'yarn install && yarn prepack'}
     Plug 'elixir-editors/vim-elixir'
     Plug 'lukas-reineke/indent-blankline.nvim'
     Plug 'nvim-lualine/lualine.nvim'
@@ -12,11 +12,10 @@ call plug#begin('~/.nvim/plugin')
     Plug 'kyazdani42/nvim-web-devicons'
     Plug 'ryanoasis/vim-devicons'
     Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
-    " Plug 'nvim-treesitter/nvim-treesitter', {'commit': 'a2d7e78b0714a0dc066416100b7398d3f0941c23', 'do': ':TSUpdate'}
     Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
     Plug 'junegunn/fzf.vim'
     Plug 'nvim-lua/plenary.nvim'
-    Plug 'nvim-telescope/telescope.nvim' , { 'tag': '0.1.4' }
+    Plug 'nvim-telescope/telescope.nvim'
     Plug 'neovim/nvim-lspconfig'
     Plug 'airblade/vim-gitgutter'
     Plug 'folke/todo-comments.nvim'
@@ -38,6 +37,14 @@ call plug#begin('~/.nvim/plugin')
     Plug 'bluz71/vim-nightfly-colors', { 'as': 'nightfly' }
     Plug 'overcache/NeoSolarized'
     Plug 'pmizio/typescript-tools.nvim' 
+    Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npx --yes yarn install' }
+    Plug 'tpope/vim-commentary'
+    " Plug 'goolord/alpha-nvim'
+    Plug 'nvim-tree/nvim-web-devicons'
+    " Plug 'startup-nvim/startup.nvim' 
+    Plug 'gleam-lang/gleam.vim'
+    Plug 'stevearc/conform.nvim'
+    Plug 'udalov/kotlin-vim'
 call plug#end()
 
 "<------- General configuraiton ------->
@@ -53,8 +60,11 @@ set expandtab
 set shiftwidth=2
 set cursorline
 set list
-set listchars=tab:›\ ,lead:⋅,trail:⋅
+" lead:⋅
+set listchars=tab:›\ ,trail:⋅
 
+" Color scheme settings
+colorscheme terafox
 let g:nord_contrast = v:false
 let g:nord_borders = v:true
 let g:nord_disable_background = v:false
@@ -62,13 +72,6 @@ let g:nord_italic = v:false
 let g:nord_uniform_diff_background = v:true
 let g:nord_bold = v:false
 let g:nord_cursorline_transparent = v:true
-
-"colorscheme nord
-"colorscheme tokyonight-night
-"colorscheme gruvbox
-"colorscheme nightfox
-"colorscheme nightfly
-colorscheme NeoSolarized
 
 " Find files using Telescope command-line sugar.
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
@@ -97,28 +100,38 @@ fu! RestoreSess()
   endif
 endfunction
 
-autocmd VimLeave * NERDTreeClose
-autocmd VimLeave * call SaveSess()
-autocmd VimEnter * nested call RestoreSess()
-autocmd VimEnter * NERDTree
-set sessionoptions-=options  " Don't save options
+" <------- Auto Commands config section ------->
+" autocmd VimLeave * NERDTreeClose
+"autocmd VimLeave * call SaveSess()
+"autocmd VimEnter * nested call RestoreSess()
+"set sessionoptions-=options  " Don't save options
+" autocmd VimEnter * NERDTree
+" autocmd VimEnter * call timer_start(30, { tid -> execute('NERDTree')})
+autocmd VimEnter * call timer_start(170, { tid -> execute(':vertical resize +15 | :wincmd b | :belowright split terminal | :resize 10 | :wincmd b | :term ')})
 
 " NERDTree focus mapping
 nnoremap <leader>nf :NERDTreeFind<CR>
 
+" Prettier on save config
+autocmd BufWritePre *.ts :Prettier
+autocmd BufWritePre *.tsx :Prettier
+autocmd BufWritePre *.css :Prettier
+
 " <------- CoC general and autocomplete configuration ------->
 " list of CoC extension that would be automatically installed on 1st sturtup
+"      \'coc-highlight',
 let g:coc_global_extensions = [
+      \'coc-highlight',
       \'coc-eslint',
       \'coc-tsserver',
       \'coc-prettier',
       \'coc-rust-analyzer',
       \'coc-markdownlint',
-      \'coc-highlight',
       \'coc-explorer',
       \'coc-json', 
       \'coc-git',
       \'coc-prisma',
+      \'coc-kotlin',
       \]
 
 " Use tab for trigger completion with characters ahead and navigate.
@@ -172,16 +185,16 @@ map <leader>r :NERDTreeFind<cr>
 
 " <------ Neovide config section ------>
 if exists("g:neovide")
-    set guifont=Iosevka:h14
+    set guifont=Iosevka\ Custom:h14
     "let g:transparency = 0.9
     let g:neovide_scroll_animation_length = 0.35
-    let g:neovide_transparency = 0.85
+    let g:neovide_transparency = 0.92
     let g:neovide_remember_window_size = v:true
     let g:neovide_refresh_rate = 2000
 endif
 
 " <------ MacOS-specific settings section ------->
-let g:coc_node_path = '/home/diodredd/.nvm/versions/node/v18.15.0/bin/node'
+" let g:coc_node_path = '/home/difodredd/.nvm/versions/node/v18.15.0/bin/node'
 "let g:coc_node_path = trim(system('which node'))
 
 let g:colorizer_auto_filetype='css,html,js,ts,svelte'
@@ -194,18 +207,38 @@ map rf :%! rustfmt <CR>
 " let g:minimap_width = 10
 " let g:minimap_auto_start = 1
 
+" <------ Commentary.vim ------>
+filetype plugin indent on
+map gc :Commentary <CR>
+map gcc :Commentary <CR>
+
+set conceallevel=2
 " <------ Lua script configuraiton until the EOF ------>
 lua <<EOF
+on_attach = function(client, bufnr)
+    if client.server_capabilities.inlayHintProvider then
+      vim.lsp.inlay_hint.enable(true)
+    end
+end
+
 vim.opt.fillchars = {eob = " "}
 vim.opt.list = true
+
+vim.diagnostic.config({
+  virtual_lines = false,
+})
+
+require'lspconfig'.kotlin_language_server.setup{}
+require'lspconfig'.gleam.setup{}
 require'lspconfig'.terraformls.setup{}
 require'lspconfig'.tsserver.setup {
+  on_attach = on_attach,
   settings = {
     typescript = {
       inlayHints = {
         includeInlayParameterNameHints = "all", -- 'none' | 'literals' | 'all'
         includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-        includeInlayVariableTypeHints = true,
+        includeInlayVariableTypeHints = false,
         includeInlayFunctionParameterTypeHints = true,
         includeInlayVariableTypeHintsWhenTypeMatchesName = true,
         includeInlayPropertyDeclarationTypeHints = true,
@@ -217,7 +250,7 @@ require'lspconfig'.tsserver.setup {
       inlayHints = {
         includeInlayParameterNameHints = "all", -- 'none' | 'literals' | 'all'
         includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-        includeInlayVariableTypeHints = true,
+        includeInlayVariableTypeHints = false,
         includeInlayFunctionParameterTypeHints = true,
         includeInlayVariableTypeHintsWhenTypeMatchesName = true,
         includeInlayPropertyDeclarationTypeHints = true,
@@ -230,10 +263,13 @@ require'lspconfig'.tsserver.setup {
 require'lspconfig'.rust_analyzer.setup {}
 
 require('nvim-treesitter.configs').setup {
-  ensure_installed = { "lua", "rust", "javascript", "typescript", "yaml", "vim" },
-  highlight = { enable = true },
+  ensure_installed = { "lua", "rust", "javascript", "typescript", "yaml", "vim", "kotlin" },
+  highlight = { enable = true, disable = { "vim", "txt" } },
   indent = { enable = true }
-}
+ }
+
+vim.treesitter.language.add("gleam", { path = "/home/diodredd/tree-sitters/tree-sitter-gleam/gleam.so" })
+-- vim.treesitter.language.add("kotlin", { path = "/home/diodredd/tree-sitters/tree-sitter-kotlin/kotlin.so" })
 
 local highlight = {
     "RainbowRed",
@@ -342,7 +378,7 @@ end
 
 require('lualine').setup {
   options = {
-    theme = 'nightfox',
+    theme = 'terafox',
     component_separators = '',
     section_separators = { left = '', right = '' },
   },
@@ -400,4 +436,16 @@ require("todo-comments").setup {
   -- or leave it empty to use the default settings
   -- refer to the configuration section below
 }
+
+require("conform").setup({
+  formatters_by_ft = {
+    kotlin = { "ktlint" }
+  },
+  format_after_save = {
+    -- These options will be passed to conform.format()
+    async = true,
+    lsp_fallback = true,
+  },
+})
+
 EOF
