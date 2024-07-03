@@ -64,7 +64,7 @@ set list
 set listchars=tab:›\ ,trail:⋅
 
 " Color scheme settings
-colorscheme terafox
+colorscheme gruvbox
 let g:nord_contrast = v:false
 let g:nord_borders = v:true
 let g:nord_disable_background = v:false
@@ -108,6 +108,7 @@ endfunction
 " autocmd VimEnter * NERDTree
 " autocmd VimEnter * call timer_start(30, { tid -> execute('NERDTree')})
 autocmd VimEnter * call timer_start(170, { tid -> execute(':vertical resize +15 | :wincmd b | :belowright split terminal | :resize 10 | :wincmd b | :term ')})
+" autocmd VimEnter * call timer_start(170, { tid -> execute(':vs terminal | :vertical resize 200 | :wincmd b | :term ')})
 
 " NERDTree focus mapping
 nnoremap <leader>nf :NERDTreeFind<CR>
@@ -185,9 +186,10 @@ map <leader>r :NERDTreeFind<cr>
 
 " <------ Neovide config section ------>
 if exists("g:neovide")
-    set guifont=Iosevka\ Custom:h14
+    " set guifont=Iosevka\ Custom:h14
+    set guifont=Victor\ Mono:h14
     "let g:transparency = 0.9
-    let g:neovide_scroll_animation_length = 0.35
+    let g:neovide_scroll_animation_length = 0.55
     let g:neovide_transparency = 0.92
     let g:neovide_remember_window_size = v:true
     let g:neovide_refresh_rate = 2000
@@ -378,7 +380,7 @@ end
 
 require('lualine').setup {
   options = {
-    theme = 'terafox',
+    theme = 'gruvbox',
     component_separators = '',
     section_separators = { left = '', right = '' },
   },
