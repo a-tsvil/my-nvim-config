@@ -1,2 +1,2 @@
-:CocOutline
+" :CocOutline
 setlocal commentstring=//\%s

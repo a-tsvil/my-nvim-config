@@ -5,7 +5,7 @@ call plug#begin('~/.nvim/plugin')
     Plug 'gpanders/editorconfig.nvim' 
     Plug 'neoclide/coc.nvim', {'branch': 'release'}
     " Plug 'elixir-lsp/coc-elixir', {'do': 'yarn install && yarn prepack'}
-    Plug 'elixir-editors/vim-elixir'
+    " Plug 'elixir-editors/vim-elixir'
     Plug 'lukas-reineke/indent-blankline.nvim'
     Plug 'nvim-lualine/lualine.nvim'
     " If you want to have icons in your statusline choose one of these
@@ -34,17 +34,21 @@ call plug#begin('~/.nvim/plugin')
     " Plug 'wfxr/minimap.vim'
     Plug 'rust-lang/rust.vim'
     Plug 'prisma/vim-prisma'
-    Plug 'bluz71/vim-nightfly-colors', { 'as': 'nightfly' }
-    Plug 'overcache/NeoSolarized'
+    " Plug 'bluz71/vim-nightfly-colors', { 'as': 'nightfly' }
+    " Plug 'overcache/NeoSolarized'
     Plug 'pmizio/typescript-tools.nvim' 
     Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npx --yes yarn install' }
     Plug 'tpope/vim-commentary'
     " Plug 'goolord/alpha-nvim'
     Plug 'nvim-tree/nvim-web-devicons'
     " Plug 'startup-nvim/startup.nvim' 
-    Plug 'gleam-lang/gleam.vim'
-    Plug 'stevearc/conform.nvim'
-    Plug 'udalov/kotlin-vim'
+    " Plug 'gleam-lang/gleam.vim'
+    " Plug 'stevearc/conform.nvim'
+    " Plug 'udalov/kotlin-vim'
+    " Plug 'ldelossa/nvim-ide'
+    " Plug 'NeogitOrg/neogit'
+    " Plug 'rose-pine/neovim'
+    Plug 'catppuccin/nvim'
 call plug#end()
 
 "<------- General configuraiton ------->
@@ -64,7 +68,7 @@ set list
 set listchars=tab:›\ ,trail:⋅
 
 " Color scheme settings
-colorscheme gruvbox
+colorscheme nordfox
 let g:nord_contrast = v:false
 let g:nord_borders = v:true
 let g:nord_disable_background = v:false
@@ -107,23 +111,22 @@ endfunction
 "set sessionoptions-=options  " Don't save options
 " autocmd VimEnter * NERDTree
 " autocmd VimEnter * call timer_start(30, { tid -> execute('NERDTree')})
-autocmd VimEnter * call timer_start(170, { tid -> execute(':vertical resize +15 | :wincmd b | :belowright split terminal | :resize 10 | :wincmd b | :term ')})
+" autocmd VimEnter * call timer_start(170, { tid -> execute(':vertical resize +15 | :wincmd b | :belowright split terminal | :resize 10 | :wincmd b | :term ')})
 " autocmd VimEnter * call timer_start(170, { tid -> execute(':vs terminal | :vertical resize 200 | :wincmd b | :term ')})
 
 " NERDTree focus mapping
 nnoremap <leader>nf :NERDTreeFind<CR>
 
 " Prettier on save config
-autocmd BufWritePre *.ts :Prettier
-autocmd BufWritePre *.tsx :Prettier
-autocmd BufWritePre *.css :Prettier
+" autocmd BufWritePre *.ts :Prettier
+" autocmd BufWritePre *.tsx :Prettier
+" autocmd BufWritePre *.css :Prettier
 
 " <------- CoC general and autocomplete configuration ------->
 " list of CoC extension that would be automatically installed on 1st sturtup
 "      \'coc-highlight',
 let g:coc_global_extensions = [
       \'coc-highlight',
-      \'coc-eslint',
       \'coc-tsserver',
       \'coc-prettier',
       \'coc-rust-analyzer',
@@ -132,7 +135,7 @@ let g:coc_global_extensions = [
       \'coc-json', 
       \'coc-git',
       \'coc-prisma',
-      \'coc-kotlin',
+      \'coc-go',
       \]
 
 " Use tab for trigger completion with characters ahead and navigate.
@@ -187,7 +190,7 @@ map <leader>r :NERDTreeFind<cr>
 " <------ Neovide config section ------>
 if exists("g:neovide")
     " set guifont=Iosevka\ Custom:h14
-    set guifont=Victor\ Mono:h14
+    set guifont=Victor\ Mono:h13.5
     "let g:transparency = 0.9
     let g:neovide_scroll_animation_length = 0.55
     let g:neovide_transparency = 0.92
@@ -215,6 +218,12 @@ map gc :Commentary <CR>
 map gcc :Commentary <CR>
 
 set conceallevel=2
+
+" <------ nvim-ide mappings ------>
+nmap <leader>trp :Workspace RightPanelToggle<CR>
+nmap <leader>cbn :Workspace Bookmarks CreateNotebook<CR>
+nmap <leader>cb :Workspace Bookmarks CreateBookmark<CR>
+
 " <------ Lua script configuraiton until the EOF ------>
 lua <<EOF
 on_attach = function(client, bufnr)
@@ -230,10 +239,12 @@ vim.diagnostic.config({
   virtual_lines = false,
 })
 
-require'lspconfig'.kotlin_language_server.setup{}
+require'lspconfig'.golangci_lint_ls.setup{}
+require'lspconfig'.gopls.setup{}
+require'lspconfig'.eslint.setup {}
 require'lspconfig'.gleam.setup{}
 require'lspconfig'.terraformls.setup{}
-require'lspconfig'.tsserver.setup {
+require'lspconfig'.ts_ls.setup {
   on_attach = on_attach,
   settings = {
     typescript = {
@@ -265,8 +276,8 @@ require'lspconfig'.tsserver.setup {
 require'lspconfig'.rust_analyzer.setup {}
 
 require('nvim-treesitter.configs').setup {
-  ensure_installed = { "lua", "rust", "javascript", "typescript", "yaml", "vim", "kotlin" },
-  highlight = { enable = true, disable = { "vim", "txt" } },
+  highlight = { enable = true, disable = { "vim", "txt", "help" } },
+  ensure_installed = { "lua", "rust", "javascript", "typescript", "tsx", "json", "go", "yaml", "vim", "vimdoc", "kotlin" },
   indent = { enable = true }
  }
 
@@ -281,7 +292,6 @@ local highlight = {
     "RainbowGreen",
     "RainbowViolet",
     "RainbowCyan",
-    "CurrentScope",
 }
 
 local hooks = require "ibl.hooks"
@@ -295,18 +305,17 @@ hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
     vim.api.nvim_set_hl(0, "RainbowGreen", { fg = "#98C379" })
     vim.api.nvim_set_hl(0, "RainbowViolet", { fg = "#C678DD" })
     vim.api.nvim_set_hl(0, "RainbowCyan", { fg = "#56B6C2" })
-    vim.api.nvim_set_hl(0, "CurrentScope", { fg = "#A784DB" })
 end)
 
-require("ibl").setup({ 
-  indent = { highlight = highlight },
-  scope = { 
-    enabled = true,
-    include = { 
-       node_type = { ["*"] = { "*" } },
-    }
-  },
-})
+--local highlight = {
+--    "CursorColumn",
+--    "Whitespace",
+--}
+
+require("ibl").setup {
+    indent = { highlight = highlight },
+    scope = { enabled = true }
+}
 
 local colors = {
   red = '#ca1243',
@@ -380,7 +389,7 @@ end
 
 require('lualine').setup {
   options = {
-    theme = 'gruvbox',
+    theme = 'nordfox',
     component_separators = '',
     section_separators = { left = '', right = '' },
   },
@@ -439,15 +448,81 @@ require("todo-comments").setup {
   -- refer to the configuration section below
 }
 
-require("conform").setup({
-  formatters_by_ft = {
-    kotlin = { "ktlint" }
-  },
-  format_after_save = {
-    -- These options will be passed to conform.format()
-    async = true,
-    lsp_fallback = true,
-  },
-})
+-- require("conform").setup({
+--   formatters_by_ft = {
+--     kotlin = { "ktlint" }
+--   },
+--   format_after_save = {
+--     -- These options will be passed to conform.format()
+--     async = true,
+--     lsp_fallback = true,
+--   },
+-- })
 
+-- local neogit = require('neogit')
+-- neogit.setup {}
+
+-- local bufferlist      = require('ide.components.bufferlist')
+-- local explorer        = require('ide.components.explorer')
+-- local outline         = require('ide.components.outline')
+-- local callhierarchy   = require('ide.components.callhierarchy')
+-- local timeline        = require('ide.components.timeline')
+-- local terminal        = require('ide.components.terminal')
+-- local terminalbrowser = require('ide.components.terminal.terminalbrowser')
+-- local changes         = require('ide.components.changes')
+-- local commits         = require('ide.components.commits')
+-- local branches        = require('ide.components.branches')
+-- local bookmarks       = require('ide.components.bookmarks')
+--
+-- require('ide').setup({
+--     -- The global icon set to use.
+--     -- values: "nerd", "codicon", "default"
+--     icon_set = "default",
+--     -- Set the log level for nvim-ide's log. Log can be accessed with 
+--     -- 'Workspace OpenLog'. Values are 'debug', 'warn', 'info', 'error'
+--     log_level = "info",
+--     -- Component specific configurations and default config overrides.
+--     components = {
+--         -- The global keymap is applied to all Components before construction.
+--         -- It allows common keymaps such as "hide" to be overridden, without having
+--         -- to make an override entry for all Components.
+--         --
+--         -- If a more specific keymap override is defined for a specific Component
+--         -- this takes precedence.
+--         global_keymaps = {
+--             -- example, change all Component's hide keymap to "h"
+--             -- hide = h
+--         },
+--         -- example, prefer "x" for hide only for Explorer component.
+--         -- Explorer = {
+--         --     keymaps = {
+--         --         hide = "x",
+--         --     }
+--         -- }
+--     },
+--     -- default panel groups to display on left and right.
+--     panels = {
+--         left = "explorer",
+--         right = "bookmarks",
+--     },
+--     -- panels defined by groups of components, user is free to redefine the defaults
+--     -- and/or add additional.
+--     panel_groups = {
+--         explorer = { explorer.Name, outline.Name },
+--         terminal = { terminal.Name },
+--         git = { changes.Name, commits.Name, timeline.Name, branches.Name },
+--         bookmarks = { bookmarks.Name }
+--     },
+--     -- workspaces config
+--     workspaces = {
+--         -- which panels to open by default, one of: 'left', 'right', 'both', 'none'
+--         auto_open = 'left',
+--     },
+--     -- default panel sizes for the different positions
+--     panel_sizes = {
+--         left = 30,
+--         right = 30,
+--         bottom = 15
+--     }
+-- })
 EOF
