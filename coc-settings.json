@@ -26,13 +26,6 @@
       "args": ["lsp"],
       "filetypes": ["gleam"]
     },
-    "golangci-lint-languageserver": {
-      "command": "golangci-lint-langserver",
-      "filetypes": ["go"],
-      "initializationOptions": {
-        "command": ["golangci-lint", "run", "--enable-all", "--disable", "lll", "--out-format", "json", "--issues-exit-code=1"]
-      }
-    }
   },
   "svelte.enable-ts-plugin": true,
   "outline.splitCommand": "belowright 40vs"

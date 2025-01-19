@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json",
+  "runtime": {
+    "version": "LuaJIT"
+  },
+  "workspace": {
+    "library": [
+      "runtime/lua",
+      "$VIMRUNTIME/lua/vim",
+      "${3rd}/luv/library"
+    ],
+    "checkThirdParty": false
+  }
+}
