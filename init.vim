@@ -25,7 +25,6 @@ call plug#begin('~/.nvim/plugin')
     Plug 'L3MON4D3/LuaSnip'
 
     Plug 'neovim/nvim-lspconfig'
-    " Plug 'neoclide/coc.nvim', {'branch': 'release'}
     Plug 'ray-x/lsp_signature.nvim'
 
     Plug 'airblade/vim-gitgutter'
@@ -60,9 +59,10 @@ call plug#begin('~/.nvim/plugin')
     Plug 'sbdchd/neoformat'
     Plug 'folke/trouble.nvim'
     Plug 'dgagn/diagflow.nvim'
-    " Plug 'mfussenegger/nvim-lint'
-    " Plug 'williamboman/mason.nvim'
     Plug 'stevearc/aerial.nvim'
+    Plug 'rafamadriz/friendly-snippets'
+ 
+    " Plug 'williamboman/mason.nvim'
 call plug#end()
 
 "<------- General configuraiton ------->
@@ -135,7 +135,15 @@ map gcc :Commentary <CR>
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
 
-" <------ Lua script configuraiton until the EOF ------>
-lua <<EOF
-require('config')
-EOF
+" <------ Neoformat configuration --->
+let g:neoformat_try_node_exe = 1
+nnoremap <leader>fm :Neoformat<CR>
+
+" <------ Semantic highlighting on hold --->
+autocmd CursorHold  <buffer> lua vim.lsp.buf.document_highlight()
+autocmd CursorHoldI <buffer> lua vim.lsp.buf.document_highlight()
+autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
+
+" <------ Lua configurations import  ------>
+:source 'lua/config.lua'
+

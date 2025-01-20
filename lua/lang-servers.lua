@@ -1,10 +1,10 @@
-local lspconfig = require'lspconfig'
+local lspconfig = require 'lspconfig'
 
 lspconfig.lua_ls.setup {
   on_init = function(client)
     if client.workspace_folders then
       local path = client.workspace_folders[1].name
-      if vim.loop.fs_stat(path..'/.luarc.json') or vim.loop.fs_stat(path..'/.luarc.jsonc') then
+      if vim.loop.fs_stat(path .. '/.luarc.json') or vim.loop.fs_stat(path .. '/.luarc.jsonc') then
         return
       end
     end
@@ -13,7 +13,7 @@ lspconfig.lua_ls.setup {
       runtime = {
         -- Tell the language server which version of Lua you're using
         -- (most likely LuaJIT in the case of Neovim)
-        version = 'LuaJIT'
+        version = 'LuaJIT',
       },
       -- Make the server aware of Neovim runtime files
       workspace = {
@@ -22,23 +22,23 @@ lspconfig.lua_ls.setup {
           vim.env.VIMRUNTIME,
           -- "${3rd}/luv/library",
           -- "${3rd}/busted/library",
-        }
+        },
         -- or pull in all of 'runtimepath'. NOTE: this is a lot slower and will cause issues when working on your own configuration (see https://github.com/neovim/nvim-lspconfig/issues/3189)
         -- library = vim.api.nvim_get_runtime_file("", true)
-      }
+      },
     })
   end,
   settings = {
-     Lua = {
-        completion = {
-          callSnippet = 'Replace',
-        },
-     },
-  }
+    Lua = {
+      completion = {
+        callSnippet = 'Replace',
+      },
+    },
+  },
 }
 
-lspconfig.golangci_lint_ls.setup{}
-lspconfig.gopls.setup{
+lspconfig.golangci_lint_ls.setup {}
+lspconfig.gopls.setup {
   settings = {
     gopls = {
       completeUnimported = true,
@@ -50,7 +50,7 @@ lspconfig.gopls.setup{
   },
 }
 
-lspconfig.terraformls.setup{}
+lspconfig.terraformls.setup {}
 
 lspconfig.eslint.setup {}
 lspconfig.ts_ls.setup {
@@ -68,7 +68,7 @@ lspconfig.ts_ls.setup {
         completeFunctionCalls = true,
       },
       inlayHints = {
-        includeInlayParameterNameHints = "all", -- 'none' | 'literals' | 'all'
+        includeInlayParameterNameHints = 'all', -- 'none' | 'literals' | 'all'
         includeInlayParameterNameHintsWhenArgumentMatchesName = true,
         includeInlayVariableTypeHints = false,
         includeInlayFunctionParameterTypeHints = true,
@@ -83,7 +83,7 @@ lspconfig.ts_ls.setup {
         completeFunctionCalls = true,
       },
       inlayHints = {
-        includeInlayParameterNameHints = "all", -- 'none' | 'literals' | 'all'
+        includeInlayParameterNameHints = 'all', -- 'none' | 'literals' | 'all'
         includeInlayParameterNameHintsWhenArgumentMatchesName = true,
         includeInlayVariableTypeHints = false,
         includeInlayFunctionParameterTypeHints = true,
