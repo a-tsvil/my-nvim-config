@@ -4,6 +4,7 @@ require('lang-servers')
 require('lualine-setup')
 require('nvim-cmp-config')
 require('folding')
+require('nvim-tree-config')
 
 -- vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep:|,foldclose:]]
 vim.opt.fillchars = { eob = ' ', fold = ' ', foldopen = '', foldclose = '' }

@@ -61,6 +61,8 @@ call plug#begin('~/.nvim/plugin')
     Plug 'dgagn/diagflow.nvim'
     Plug 'stevearc/aerial.nvim'
     Plug 'rafamadriz/friendly-snippets'
+    Plug 'RRethy/vim-illuminate'
+    Plug 'nvim-tree/nvim-tree.lua'
  
     " Plug 'williamboman/mason.nvim'
 call plug#end()
@@ -117,8 +119,10 @@ nmap <silent> <leader>m :History<CR>
 
 " <------ NERDTree configuration ------>
 let NERDTreeShowHidden=1
-map <leader>r :NERDTreeFind<cr>
-nnoremap <leader>nf :NERDTreeFind<CR>
+map <leader>r :NvimTreeFindFile<cr>
+nnoremap <leader>nf :NvimTreeFindFile<CR>
+map <leader>nvt :NvimTreeOpen<CR>
+
 
 " <------ MacOS-specific settings section ------->
 "let g:coc_node_path = '/home/difodredd/.nvm/versions/node/v18.15.0/bin/node'
@@ -139,11 +143,5 @@ let g:ctrlp_cmd = 'CtrlP'
 let g:neoformat_try_node_exe = 1
 nnoremap <leader>fm :Neoformat<CR>
 
-" <------ Semantic highlighting on hold --->
-autocmd CursorHold  <buffer> lua vim.lsp.buf.document_highlight()
-autocmd CursorHoldI <buffer> lua vim.lsp.buf.document_highlight()
-autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-
 " <------ Lua configurations import  ------>
-:source 'lua/config.lua'
-
+:lua require('config')
