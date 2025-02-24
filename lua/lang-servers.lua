@@ -96,9 +96,52 @@ lspconfig.ts_ls.setup {
   },
 }
 
+local angularls_path = '/home/atsvil/.nvm/versions/node/v23.5.0/bin/'
+
+local cmd = {
+  'ngserver',
+  '--stdio',
+  '--tsProbeLocations',
+  table.concat({
+    angularls_path,
+    vim.uv.cwd(),
+  }, ','),
+  '--ngProbeLocations',
+  table.concat({
+    angularls_path .. '/node_modules/@angular/language-server',
+    vim.uv.cwd(),
+  }, ','),
+}
+
+lspconfig.angularls.setup {
+  cmd = cmd,
+  on_new_config = function(new_config, new_root_dir)
+    new_config.cmd = cmd
+  end,
+}
+
 lspconfig.phpactor.setup {}
 
 lspconfig.rust_analyzer.setup {}
 
 lspconfig.sqls.setup {}
 -- lspconfig.gleam.setup{}
+
+lspconfig.prismals.setup {}
+
+--Enable (broadcasting) snippet capability for completion
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.textDocument.completion.completionItem.snippetSupport = true
+
+lspconfig.cssls.setup {
+  capabilities = capabilities,
+}
+
+-- various lsp related keymaps
+vim.keymap.set('n', '<Leader>lr', vim.lsp.buf.rename)
+
+require'lspconfig'.pyright.setup{}
+
+require'lspconfig'.jsonls.setup {
+  capabilities = capabilities,
+}

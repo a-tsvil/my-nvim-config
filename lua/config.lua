@@ -72,13 +72,13 @@ require('trouble').setup()
 require('go').setup()
 
 local format_sync_grp = vim.api.nvim_create_augroup('GoFormat', {})
-vim.api.nvim_create_autocmd('BufWritePre', {
-  pattern = '*.go',
-  callback = function()
-    require('go.format').goimports()
-  end,
-  group = format_sync_grp,
-})
+-- vim.api.nvim_create_autocmd('BufWritePre', {
+--   pattern = '*.go',
+--   callback = function()
+--     require('go.format').goimports()
+--   end,
+--   group = format_sync_grp,
+-- })
 
 require('lsp_signature').setup({
   floating_window = false,
@@ -97,3 +97,36 @@ require('aerial').setup({
 vim.keymap.set('n', '<leader>a', '<cmd>AerialToggle!<CR>')
 
 require('luasnip.loaders.from_vscode').lazy_load()
+
+require('nvim-autopairs').setup {}
+
+require('nvim-ts-autotag').setup({
+  opts = {
+    -- Defaults
+    enable_close = true, -- Auto close tags
+    enable_rename = true, -- Auto rename pairs of tags
+    enable_close_on_slash = false, -- Auto close on trailing </
+  },
+  -- Also override individual filetype configs, these take priority.
+  -- Empty by default, useful if one of the "opts" global settings
+  -- doesn't work well in a specific filetype
+  per_filetype = {
+    ['html'] = {
+      enable_close = false,
+    },
+  },
+})
+
+require('telescope').setup({
+  pickers = {
+    find_files = {
+      hidden = true,
+    },
+  },
+})
+-- Telescope keymaps
+vim.keymap.set('n', '<leader>ff', '<cmd>Telescope find_files<CR>')
+vim.keymap.set('n', '<leader>fg', '<cmd>Telescope live_grep<CR>')
+vim.keymap.set('n', '<leader>fb', '<cmd>Telescope buffers<CR>')
+vim.keymap.set('n', '<leader>fh', '<cmd>Telescope help_tags<CR>')
+vim.keymap.set('n', '<leader>fs', '<cmd>Telescope git_status<CR>')

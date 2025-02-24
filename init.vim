@@ -1,4 +1,3 @@
-" nvim/neovide configuration created and maintained by DioDredd
 " plugins list
 call plug#begin('~/.nvim/plugin')
     Plug 'scrooloose/nerdtree'
@@ -37,6 +36,7 @@ call plug#begin('~/.nvim/plugin')
     Plug 'arcticicestudio/nord-vim'
     Plug 'rose-pine/neovim'
     Plug 'catppuccin/nvim'
+    Plug 'rebelot/kanagawa.nvim'
 
     Plug 'chrisbra/Colorizer'
     " Plug 'wellle/context.vim'
@@ -63,8 +63,9 @@ call plug#begin('~/.nvim/plugin')
     Plug 'rafamadriz/friendly-snippets'
     Plug 'RRethy/vim-illuminate'
     Plug 'nvim-tree/nvim-tree.lua'
- 
-    " Plug 'williamboman/mason.nvim'
+    Plug 'windwp/nvim-autopairs'
+    Plug 'windwp/nvim-ts-autotag'
+  " Plug 'williamboman/mason.nvim'
 call plug#end()
 
 "<------- General configuraiton ------->
@@ -80,12 +81,12 @@ set expandtab
 set shiftwidth=2
 set cursorline
 set list
-" lead:⋅
-set listchars=tab:›\ ,trail:⋅
+set listchars=trail:⋅,tab:\│\ 
 set conceallevel=2
+set signcolumn=yes
 
 " Color scheme settings
-colorscheme tokyonight-night
+colorscheme kanagawa
 let g:nord_contrast = v:false
 let g:nord_borders = v:true
 let g:nord_disable_background = v:false
@@ -94,7 +95,7 @@ let g:nord_uniform_diff_background = v:true
 let g:nord_bold = v:false
 let g:nord_cursorline_transparent = v:true
 
-let g:colorizer_auto_filetype='css,html,js,ts,svelte'
+let g:colorizer_auto_filetype='css,scss,html,js,jsx,ts,tsx,svelte'
 
 " <------ Neovide config section ------>
 if exists("g:neovide")
@@ -107,12 +108,6 @@ if exists("g:neovide")
     let g:neovide_refresh_rate = 2000
     let g:neovide_cursor_vfx_mode = 'sonicboom'
 endif
-
-" Find files using Telescope command-line sugar.
-nnoremap <leader>ff <cmd>Telescope find_files<cr>
-nnoremap <leader>fg <cmd>Telescope live_grep<cr>
-nnoremap <leader>fb <cmd>Telescope buffers<cr>
-nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 
 " File History open mapping
 nmap <silent> <leader>m :History<CR>
@@ -142,6 +137,15 @@ let g:ctrlp_cmd = 'CtrlP'
 " <------ Neoformat configuration --->
 let g:neoformat_try_node_exe = 1
 nnoremap <leader>fm :Neoformat<CR>
+nnoremap <leader>fmp :Neoformat prettier<CR>
+let g:neoformat_php_phpcsfixer = {
+            \ 'exe': './vendor/bin/php-cs-fixer',
+            \ 'args': ['fix'],
+            \ 'env': ["PHP_CS_FIXER_IGNORE_ENV=1"],
+            \ 'replace': 1,
+            \ }
+
+let g:neoformat_enabled_php = ['phpcsfixer']
 
 " <------ Lua configurations import  ------>
 :lua require('config')
