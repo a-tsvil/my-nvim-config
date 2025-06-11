@@ -103,10 +103,10 @@ if exists("g:neovide")
     " set guifont=Victor\ Mono:h13.5
     "let g:transparency = 0.9
     let g:neovide_scroll_animation_length = 0.55
-    let g:neovide_transparency = 0.92
+    let g:neovide_opacity = 0.92
     let g:neovide_remember_window_size = v:true
     let g:neovide_refresh_rate = 2000
-    let g:neovide_cursor_vfx_mode = 'sonicboom'
+    " let g:neovide_cursor_vfx_mode = 'sonicboom'
 endif
 
 " File History open mapping

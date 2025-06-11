@@ -140,8 +140,8 @@ lspconfig.cssls.setup {
 -- various lsp related keymaps
 vim.keymap.set('n', '<Leader>lr', vim.lsp.buf.rename)
 
-require'lspconfig'.pyright.setup{}
+require 'lspconfig'.pyright.setup {}
 
-require'lspconfig'.jsonls.setup {
+require 'lspconfig'.jsonls.setup {
   capabilities = capabilities,
 }
