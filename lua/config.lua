@@ -1,4 +1,86 @@
 -- main Lua-based configurations starts here
+
+-- General settings
+vim.opt.number = true
+vim.opt.relativenumber = true
+vim.opt.clipboard:append('unnamedplus')
+vim.opt.wrap = false
+vim.opt.showmatch = true
+vim.opt.ignorecase = true
+vim.opt.tabstop = 4
+vim.opt.softtabstop = 4
+vim.opt.expandtab = true
+vim.opt.shiftwidth = 2
+vim.opt.cursorline = true
+vim.opt.list = true
+vim.opt.listchars = { trail = '⋅', tab = '│ ' }
+vim.opt.conceallevel = 2
+vim.opt.signcolumn = 'yes'
+
+-- Color scheme
+vim.cmd('colorscheme kanagawa')
+vim.g.nord_contrast = false
+vim.g.nord_borders = true
+vim.g.nord_disable_background = false
+vim.g.nord_italic = false
+vim.g.nord_uniform_diff_background = true
+vim.g.nord_bold = false
+vim.g.nord_cursorline_transparent = true
+
+-- Colorizer
+vim.g.colorizer_auto_filetype = 'css,scss,html,js,jsx,ts,tsx,svelte'
+
+-- Neovide config
+if vim.g.neovide then
+  vim.opt.guifont = 'Iosevka Curly:h15.5'
+  vim.g.neovide_scroll_animation_length = 0.55
+  vim.g.neovide_opacity = 0.92
+  vim.g.neovide_remember_window_size = true
+  vim.g.neovide_refresh_rate = 2000
+  -- vim.g.neovide_cursor_vfx_mode = 'sonicboom'
+end
+
+-- File history mapping
+vim.keymap.set('n', '<leader>m', ':History<CR>', { silent = true })
+
+-- NvimTree mappings
+vim.g.NERDTreeShowHidden = 1
+vim.keymap.set('n', '<leader>r', ':NvimTreeFindFile<CR>')
+vim.keymap.set('n', '<leader>nf', ':NvimTreeFindFile<CR>')
+vim.keymap.set('n', '<leader>nvt', ':NvimTreeOpen<CR>')
+
+-- Rust formatting
+vim.keymap.set('n', 'rf', ':%! rustfmt<CR>')
+
+-- Commentary plugin mappings
+vim.cmd('filetype plugin indent on')
+vim.keymap.set('n', 'gc', ':Commentary<CR>')
+vim.keymap.set('n', 'gcc', ':Commentary<CR>')
+
+-- CtrlP
+vim.g.ctrlp_map = '<C-p>'
+vim.g.ctrlp_cmd = 'CtrlP'
+
+-- Neoformat config
+vim.g.neoformat_try_node_exe = 1
+vim.keymap.set('n', '<leader>fm', ':Neoformat<CR>')
+vim.keymap.set('n', '<leader>fmp', ':Neoformat prettier<CR>')
+
+vim.g.neoformat_php_phpcsfixer = {
+  exe = './vendor/bin/php-cs-fixer',
+  args = { 'fix' },
+  env = { 'PHP_CS_FIXER_IGNORE_ENV=1' },
+  replace = 1,
+}
+vim.g.neoformat_enabled_php = { 'phpcsfixer' }
+
+vim.g.neoformat_htmlangular_prettierd = {
+  exe = 'prettierd',
+  args = { '--stdin-filepath', '%:p' },
+  stdin = 1,
+}
+vim.g.neoformat_enabled_htmlangular = { 'prettierd' }
+
 -- plugin-specific and separate configurations import
 require('lang-servers')
 require('lualine-setup')
@@ -25,6 +107,8 @@ require('nvim-treesitter.configs').setup({
     'vimdoc',
     'php',
     'sql',
+    'html',
+    'angular',
   },
   indent = { enable = true },
 })
@@ -66,7 +150,7 @@ require('todo-comments').setup({
   -- refer to the configuration section below
 })
 
-require('diagflow').setup()
+-- require('diagflow').setup()
 require('trouble').setup()
 
 require('go').setup()
@@ -80,9 +164,25 @@ local format_sync_grp = vim.api.nvim_create_augroup('GoFormat', {})
 --   group = format_sync_grp,
 -- })
 
-require('lsp_signature').setup({
-  floating_window = false,
-})
+-- require 'lsp_signature'.setup({
+--   handler_opts = {
+--     border = 'rounded',
+--   },
+--   -- Avoid triggering on empty lines
+--   on_attach = function(client, bufnr)
+--     local sig = require 'lsp_signature'
+--     local function on_insert_char_pre()
+--       local line = vim.api.nvim_get_current_line()
+--       if line:match('^%s*$') then
+--         sig.on_detach()
+--       end
+--     end
+--     vim.api.nvim_create_autocmd('InsertCharPre', {
+--       buffer = bufnr,
+--       callback = on_insert_char_pre,
+--     })
+--   end,
+-- })
 
 require('aerial').setup({
   -- optionally use on_attach to set keymaps when aerial has attached to a buffer
@@ -101,7 +201,10 @@ require('luasnip.loaders.from_vscode').lazy_load()
 require('nvim-autopairs').setup {}
 
 require('nvim-ts-autotag').setup({
+  enable = true,
+  filetypes = { 'html', 'xml', 'tsx', 'angular', 'htmlangular' },
   opts = {
+
     -- Defaults
     enable_close = true, -- Auto close tags
     enable_rename = true, -- Auto rename pairs of tags
@@ -130,3 +233,44 @@ vim.keymap.set('n', '<leader>fg', '<cmd>Telescope live_grep<CR>')
 vim.keymap.set('n', '<leader>fb', '<cmd>Telescope buffers<CR>')
 vim.keymap.set('n', '<leader>fh', '<cmd>Telescope help_tags<CR>')
 vim.keymap.set('n', '<leader>fs', '<cmd>Telescope git_status<CR>')
+
+-- Diagnostics configuration
+-- vim.api.nvim_create_autocmd('FileType', {
+--   pattern = { 'typescript' },
+--   callback = function()
+--     local bufnr = vim.api.nvim_get_current_buf()
+--     vim.diagnostic.config({
+--       virtual_text = false,
+--       signs = true,
+--       underline = true,
+--     }, bufnr)
+--   end,
+-- })
+vim.diagnostic.config({
+  virtual_text = false, -- 👈 this disables the inline error messages
+  signs = true, -- optional: keep signs in the gutter
+  underline = true, -- optional: keep underlines
+  update_in_insert = false, -- optional: don't update in insert mode
+})
+vim.o.updatetime = 100
+vim.api.nvim_create_autocmd({ 'CursorHold' }, {
+  pattern = '*',
+  callback = function()
+    for _, winid in pairs(vim.api.nvim_tabpage_list_wins(0)) do
+      if vim.api.nvim_win_get_config(winid).zindex then
+        return
+      end
+    end
+    vim.diagnostic.open_float {
+      scope = 'cursor',
+      focusable = false,
+      close_events = {
+        'CursorMoved',
+        'CursorMovedI',
+        'BufHidden',
+        'InsertCharPre',
+        'WinLeave',
+      },
+    }
+  end,
+})

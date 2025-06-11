@@ -37,7 +37,12 @@ lspconfig.lua_ls.setup {
   },
 }
 
-lspconfig.golangci_lint_ls.setup {}
+lspconfig.golangci_lint_ls.setup {
+  init_options = {
+    command = { 'golangci-lint', 'run', '--out-format=json', '--show-stats=false' },
+    debounce = 1000,
+  },
+}
 lspconfig.gopls.setup {
   settings = {
     gopls = {
@@ -96,7 +101,7 @@ lspconfig.ts_ls.setup {
   },
 }
 
-local angularls_path = '/home/atsvil/.nvm/versions/node/v23.5.0/bin/'
+local angularls_path = '/home/atsvil/fraud-zero/admin-frontend/'
 
 local cmd = {
   'ngserver',
@@ -122,7 +127,26 @@ lspconfig.angularls.setup {
 
 lspconfig.phpactor.setup {}
 
-lspconfig.rust_analyzer.setup {}
+lspconfig.rust_analyzer.setup({
+  settings = {
+    ['rust-analyzer'] = {
+      cargo = {
+        allFeatures = true,
+      },
+      checkOnSave = {
+        command = 'clippy',
+      },
+    },
+  },
+  -- on_attach = function(client, bufnr)
+  --   -- Optional: key mappings for LSP
+  --   local bufopts = { noremap = true, silent = true, buffer = bufnr }
+  --   vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+  --   vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+  --   vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
+  -- end,
+  capabilities = require('cmp_nvim_lsp').default_capabilities(),
+})
 
 lspconfig.sqls.setup {}
 -- lspconfig.gleam.setup{}
