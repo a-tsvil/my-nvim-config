@@ -19,6 +19,7 @@ vim.opt.signcolumn = 'yes'
 
 -- Color scheme
 vim.cmd('colorscheme kanagawa')
+vim.api.nvim_set_hl(0, 'Visual', { reverse = true })
 vim.g.nord_contrast = false
 vim.g.nord_borders = true
 vim.g.nord_disable_background = false
@@ -34,9 +35,10 @@ vim.g.colorizer_auto_filetype = 'css,scss,html,js,jsx,ts,tsx,svelte'
 if vim.g.neovide then
   vim.opt.guifont = 'Iosevka Curly:h15.5'
   vim.g.neovide_scroll_animation_length = 0.55
-  vim.g.neovide_opacity = 0.92
+  vim.g.neovide_opacity = 0.9
   vim.g.neovide_remember_window_size = true
   vim.g.neovide_refresh_rate = 2000
+  -- vim.g.neovide_fullscreen = true
   -- vim.g.neovide_cursor_vfx_mode = 'sonicboom'
 end
 
@@ -63,6 +65,7 @@ vim.g.ctrlp_cmd = 'CtrlP'
 
 -- Neoformat config
 vim.g.neoformat_try_node_exe = 1
+-- vim.g.neoformat_verbose = 1
 vim.keymap.set('n', '<leader>fm', ':Neoformat<CR>')
 vim.keymap.set('n', '<leader>fmp', ':Neoformat prettier<CR>')
 
@@ -79,7 +82,13 @@ vim.g.neoformat_htmlangular_prettierd = {
   args = { '--stdin-filepath', '%:p' },
   stdin = 1,
 }
+
 vim.g.neoformat_enabled_htmlangular = { 'prettierd' }
+vim.g.neoformat_enabled_javascript = { 'prettier' }
+vim.g.neoformat_enabled_typescript = { 'prettier' }
+vim.g.neoformat_enabled_typescriptreact = { 'prettier' }
+
+vim.g.neoformat_enabled_python = { 'ruff' }
 
 -- plugin-specific and separate configurations import
 require('lang-servers')
@@ -87,6 +96,7 @@ require('lualine-setup')
 require('nvim-cmp-config')
 require('folding')
 require('nvim-tree-config')
+-- require('cursor')
 
 -- vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep:|,foldclose:]]
 vim.opt.fillchars = { eob = ' ', fold = ' ', foldopen = '', foldclose = '' }
@@ -109,6 +119,7 @@ require('nvim-treesitter.configs').setup({
     'sql',
     'html',
     'angular',
+    'kotlin',
   },
   indent = { enable = true },
 })
@@ -125,7 +136,6 @@ local highlight = {
   'RainbowViolet',
   'RainbowCyan',
 }
-
 local hooks = require('ibl.hooks')
 -- create the highlight groups in the highlight setup hook, so they are reset
 -- every time the colorscheme changes
@@ -186,6 +196,9 @@ local format_sync_grp = vim.api.nvim_create_augroup('GoFormat', {})
 
 require('aerial').setup({
   -- optionally use on_attach to set keymaps when aerial has attached to a buffer
+
+  manage_folds = true,
+
   on_attach = function(bufnr)
     -- Jump forwards/backwards with '{' and '}'
     vim.keymap.set('n', '{', '<cmd>AerialPrev<CR>', { buffer = bufnr })
@@ -234,6 +247,8 @@ vim.keymap.set('n', '<leader>fb', '<cmd>Telescope buffers<CR>')
 vim.keymap.set('n', '<leader>fh', '<cmd>Telescope help_tags<CR>')
 vim.keymap.set('n', '<leader>fs', '<cmd>Telescope git_status<CR>')
 
+vim.keymap.set('n', 'gr', require('telescope.builtin').lsp_references, { buffer = bufnr })
+
 -- Diagnostics configuration
 -- vim.api.nvim_create_autocmd('FileType', {
 --   pattern = { 'typescript' },
@@ -274,3 +289,27 @@ vim.api.nvim_create_autocmd({ 'CursorHold' }, {
     }
   end,
 })
+
+require('illuminate').configure({})
+
+local link_visual = {
+  'IlluminatedWordText',
+  'IlluminatedWordRead',
+  'IlluminatedWordWrite',
+}
+
+for _, group in ipairs(link_visual) do
+  vim.api.nvim_set_hl(0, group, { link = 'Visual' })
+end
+
+vim.api.nvim_create_autocmd('ColorScheme', {
+  pattern = '*',
+  callback = function()
+    for _, group in ipairs(link_visual) do
+      vim.api.nvim_set_hl(0, group, { link = 'Visual' })
+    end
+  end,
+})
+
+vim.keymap.set('n', '<leader>v', ':vsplit | lua vim.lsp.buf.definition()<CR>')
+vim.keymap.set('n', '<leader>s', ':belowright split | lua vim.lsp.buf.definition()<CR>')

@@ -164,8 +164,22 @@ lspconfig.cssls.setup {
 -- various lsp related keymaps
 vim.keymap.set('n', '<Leader>lr', vim.lsp.buf.rename)
 
-require 'lspconfig'.pyright.setup {}
+-- require 'lsponfig'.pyright.setup {}
+lspconfig.pyright.setup {
+  before_init = function(_, config)
+    local venv_path = os.getenv('VIRTUAL_ENV')
+    if venv_path then
+      config.settings = config.settings or {}
+      config.settings.python = config.settings.python or {}
+      config.settings.python.pythonPath = venv_path .. '/bin/python'
+    end
+  end,
+}
 
-require 'lspconfig'.jsonls.setup {
+lspconfig.jsonls.setup {
   capabilities = capabilities,
 }
+
+lspconfig.tailwindcss.setup {}
+
+vim.lsp.enable('kotlin_lsp')
