@@ -1,6 +1,4 @@
-local lspconfig = require 'lspconfig'
-
-lspconfig.lua_ls.setup {
+vim.lsp.config('lua_ls', {
   on_init = function(client)
     if client.workspace_folders then
       local path = client.workspace_folders[1].name
@@ -35,15 +33,16 @@ lspconfig.lua_ls.setup {
       },
     },
   },
-}
+})
 
-lspconfig.golangci_lint_ls.setup {
+vim.lsp.config('golangci_lint_ls', {
   init_options = {
     command = { 'golangci-lint', 'run', '--out-format=json', '--show-stats=false' },
     debounce = 1000,
   },
-}
-lspconfig.gopls.setup {
+})
+
+vim.lsp.config('gopls', {
   settings = {
     gopls = {
       completeUnimported = true,
@@ -53,12 +52,13 @@ lspconfig.gopls.setup {
       },
     },
   },
-}
+})
 
-lspconfig.terraformls.setup {}
+vim.lsp.enable('terraformls')
 
-lspconfig.eslint.setup {}
-lspconfig.ts_ls.setup {
+vim.lsp.enable('eslint')
+
+vim.lsp.enable('ts_ls', {
   on_attach = function(client, bufnr)
     if client.server_capabilities.inlayHintProvider then
       vim.lsp.inlay_hint.enable(true)
@@ -99,7 +99,7 @@ lspconfig.ts_ls.setup {
       },
     },
   },
-}
+})
 
 local angularls_path = '/home/atsvil/fraud-zero/admin-frontend/'
 
@@ -118,16 +118,16 @@ local cmd = {
   }, ','),
 }
 
-lspconfig.angularls.setup {
+vim.lsp.config('angularls', {
   cmd = cmd,
   on_new_config = function(new_config, new_root_dir)
     new_config.cmd = cmd
   end,
-}
+})
 
-lspconfig.phpactor.setup {}
+vim.lsp.enable('phpactor')
 
-lspconfig.rust_analyzer.setup({
+vim.lsp.config('rust_analyzer', {
   settings = {
     ['rust-analyzer'] = {
       cargo = {
@@ -148,24 +148,23 @@ lspconfig.rust_analyzer.setup({
   capabilities = require('cmp_nvim_lsp').default_capabilities(),
 })
 
-lspconfig.sqls.setup {}
+vim.lsp.enable('sqls')
 -- lspconfig.gleam.setup{}
 
-lspconfig.prismals.setup {}
+vim.lsp.enable('prismals')
 
 --Enable (broadcasting) snippet capability for completion
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 
-lspconfig.cssls.setup {
+vim.lsp.config('cssls', {
   capabilities = capabilities,
-}
+})
 
 -- various lsp related keymaps
 vim.keymap.set('n', '<Leader>lr', vim.lsp.buf.rename)
 
--- require 'lsponfig'.pyright.setup {}
-lspconfig.pyright.setup {
+vim.lsp.config('pyright', {
   before_init = function(_, config)
     local venv_path = os.getenv('VIRTUAL_ENV')
     if venv_path then
@@ -174,12 +173,12 @@ lspconfig.pyright.setup {
       config.settings.python.pythonPath = venv_path .. '/bin/python'
     end
   end,
-}
+})
 
-lspconfig.jsonls.setup {
+vim.lsp.config('jsonls', {
   capabilities = capabilities,
-}
+})
 
-lspconfig.tailwindcss.setup {}
+vim.lsp.enable('tailwindcss')
 
 vim.lsp.enable('kotlin_lsp')
