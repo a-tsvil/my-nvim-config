@@ -18,8 +18,8 @@ vim.lsp.config('lua_ls', {
         checkThirdParty = false,
         library = {
           vim.env.VIMRUNTIME,
-          -- "${3rd}/luv/library",
-          -- "${3rd}/busted/library",
+          "${3rd}/luv/library",
+          "${3rd}/busted/library",
         },
         -- or pull in all of 'runtimepath'. NOTE: this is a lot slower and will cause issues when working on your own configuration (see https://github.com/neovim/nvim-lspconfig/issues/3189)
         -- library = vim.api.nvim_get_runtime_file("", true)
@@ -34,6 +34,7 @@ vim.lsp.config('lua_ls', {
     },
   },
 })
+vim.lsp.enable('lua_ls')
 
 vim.lsp.config('golangci_lint_ls', {
   init_options = {
@@ -41,6 +42,7 @@ vim.lsp.config('golangci_lint_ls', {
     debounce = 1000,
   },
 })
+-- vim.lsp.enable('golangci_lint_ls')
 
 vim.lsp.config('gopls', {
   settings = {
@@ -53,12 +55,13 @@ vim.lsp.config('gopls', {
     },
   },
 })
+-- vim.lsp.enable('gopls')
 
-vim.lsp.enable('terraformls')
+-- vim.lsp.enable('terraformls')
 
 vim.lsp.enable('eslint')
 
-vim.lsp.enable('ts_ls', {
+vim.lsp.config('ts_ls', {
   on_attach = function(client, bufnr)
     if client.server_capabilities.inlayHintProvider then
       vim.lsp.inlay_hint.enable(true)
@@ -100,6 +103,7 @@ vim.lsp.enable('ts_ls', {
     },
   },
 })
+vim.lsp.enable('ts_ls')
 
 local angularls_path = '/home/atsvil/fraud-zero/admin-frontend/'
 
@@ -124,8 +128,9 @@ vim.lsp.config('angularls', {
     new_config.cmd = cmd
   end,
 })
+-- vim.lsp.enable('angularls')
 
-vim.lsp.enable('phpactor')
+-- vim.lsp.enable('phpactor')
 
 vim.lsp.config('rust_analyzer', {
   settings = {
@@ -147,11 +152,12 @@ vim.lsp.config('rust_analyzer', {
   -- end,
   capabilities = require('cmp_nvim_lsp').default_capabilities(),
 })
+vim.lsp.enable('rust_analyzer')
 
 vim.lsp.enable('sqls')
 -- lspconfig.gleam.setup{}
 
-vim.lsp.enable('prismals')
+-- vim.lsp.enable('prismals')
 
 --Enable (broadcasting) snippet capability for completion
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -160,6 +166,7 @@ capabilities.textDocument.completion.completionItem.snippetSupport = true
 vim.lsp.config('cssls', {
   capabilities = capabilities,
 })
+vim.lsp.enable('cssls')
 
 -- various lsp related keymaps
 vim.keymap.set('n', '<Leader>lr', vim.lsp.buf.rename)
@@ -174,10 +181,12 @@ vim.lsp.config('pyright', {
     end
   end,
 })
+-- vim.lsp.enable('pyright')
 
 vim.lsp.config('jsonls', {
   capabilities = capabilities,
 })
+vim.lsp.enable('jsonls')
 
 vim.lsp.enable('tailwindcss')
 

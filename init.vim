@@ -39,9 +39,10 @@ call plug#begin('~/.nvim/plugin')
     Plug 'catppuccin/nvim'
     Plug 'rebelot/kanagawa.nvim'
 
-    Plug 'chrisbra/Colorizer'
+    " Plug 'chrisbra/Colorizer'
     " Plug 'wellle/context.vim'
     Plug 'mg979/vim-visual-multi', {'branch': 'master'}
+    Plug 'catgoose/nvim-colorizer.lua'
 
     " Mr TPOPE
     Plug 'tpope/vim-commentary'

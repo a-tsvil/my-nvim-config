@@ -33,7 +33,8 @@ vim.g.colorizer_auto_filetype = 'css,scss,html,js,jsx,ts,tsx,svelte'
 
 -- Neovide config
 if vim.g.neovide then
-  vim.opt.guifont = 'Iosevka Curly:h15.5'
+  vim.opt.guifont = 'Iosevka Curly:h15'
+  -- vim.opt.guifont = 'Victor Mono:h15.5'
   vim.g.neovide_scroll_animation_length = 0.55
   vim.g.neovide_opacity = 0.9
   vim.g.neovide_remember_window_size = true
@@ -83,10 +84,10 @@ vim.g.neoformat_htmlangular_prettierd = {
   stdin = 1,
 }
 
-vim.g.neoformat_enabled_htmlangular = { 'prettierd' }
-vim.g.neoformat_enabled_javascript = { 'prettier' }
-vim.g.neoformat_enabled_typescript = { 'prettier' }
-vim.g.neoformat_enabled_typescriptreact = { 'prettier' }
+vim.g.neoformat_enabled_htmlangular = { 'eslint_d' }
+vim.g.neoformat_enabled_javascript = { 'eslint_d' }
+vim.g.neoformat_enabled_typescript = { 'eslint_d' }
+vim.g.neoformat_enabled_typescriptreact = { 'eslint_d' }
 
 vim.g.neoformat_enabled_python = { 'ruff' }
 
@@ -234,6 +235,13 @@ require('nvim-ts-autotag').setup({
 })
 
 require('telescope').setup({
+  file_ignore_patterns = {
+    'node_modules/',
+    '%.git/',
+    'dist/',
+    'build/',
+    'venv/',
+  },
   pickers = {
     find_files = {
       hidden = true,
@@ -313,3 +321,5 @@ vim.api.nvim_create_autocmd('ColorScheme', {
 
 vim.keymap.set('n', '<leader>v', ':vsplit | lua vim.lsp.buf.definition()<CR>')
 vim.keymap.set('n', '<leader>s', ':belowright split | lua vim.lsp.buf.definition()<CR>')
+
+require("colorizer").setup()
