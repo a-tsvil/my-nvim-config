@@ -27,7 +27,7 @@ call plug#begin('~/.nvim/plugin')
     Plug 'neovim/nvim-lspconfig'
     Plug 'ray-x/lsp_signature.nvim'
 
-    Plug 'airblade/vim-gitgutter'
+    " Plug 'airblade/vim-gitgutter'
     Plug 'folke/todo-comments.nvim'
 
     " Colorschemes plugins
@@ -47,7 +47,7 @@ call plug#begin('~/.nvim/plugin')
     " Mr TPOPE
     Plug 'tpope/vim-commentary'
     Plug 'tpope/vim-surround'
-    Plug 'tpope/vim-fugitive'
+    " Plug 'tpope/vim-fugitive'
 
     " Language-specific
     Plug 'rust-lang/rust.vim'
@@ -69,6 +69,13 @@ call plug#begin('~/.nvim/plugin')
     Plug 'windwp/nvim-ts-autotag'
     " Plug 'williamboman/mason.nvim'
     Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
+    " Plug 'dense-analysis/ale'
+    Plug 'rachartier/tiny-code-action.nvim'
+    " Plug 'ahmedkhalf/project.nvim'
+    Plug 'nvim-mini/mini.misc'
+    Plug 'vuki656/package-info.nvim'
+    Plug 'nmac427/guess-indent.nvim'
+    Plug 'lewis6991/gitsigns.nvim'
 call plug#end()
 
 :lua require('config')

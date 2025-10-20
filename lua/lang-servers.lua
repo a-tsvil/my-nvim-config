@@ -18,8 +18,8 @@ vim.lsp.config('lua_ls', {
         checkThirdParty = false,
         library = {
           vim.env.VIMRUNTIME,
-          "${3rd}/luv/library",
-          "${3rd}/busted/library",
+          '${3rd}/luv/library',
+          '${3rd}/busted/library',
         },
         -- or pull in all of 'runtimepath'. NOTE: this is a lot slower and will cause issues when working on your own configuration (see https://github.com/neovim/nvim-lspconfig/issues/3189)
         -- library = vim.api.nvim_get_runtime_file("", true)
@@ -77,10 +77,10 @@ vim.lsp.config('ts_ls', {
       },
       inlayHints = {
         includeInlayParameterNameHints = 'all', -- 'none' | 'literals' | 'all'
-        includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+        includeInlayParameterNameHintsWhenArgumentMatchesName = false,
         includeInlayVariableTypeHints = false,
-        includeInlayFunctionParameterTypeHints = true,
-        includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+        includeInlayFunctionParameterTypeHints = false,
+        includeInlayVariableTypeHintsWhenTypeMatchesName = false,
         includeInlayPropertyDeclarationTypeHints = true,
         includeInlayFunctionLikeReturnTypeHints = true,
         includeInlayEnumMemberValueHints = true,
@@ -191,3 +191,40 @@ vim.lsp.enable('jsonls')
 vim.lsp.enable('tailwindcss')
 
 vim.lsp.enable('kotlin_lsp')
+
+vim.lsp.enable('vacuum')
+
+vim.lsp.enable('biome')
+
+require("tiny-code-action").setup({
+  picker = {
+    "buffer",
+    opts = {
+      hotkeys = true, -- Enable hotkeys for quick selection of actions
+      hotkeys_mode = "text_diff_based", -- Modes for generating hotkeys
+      auto_preview = false, -- Enable or disable automatic preview
+      auto_accept = false, -- Automatically accept the selected action (with hotkeys)
+      position = "cursor", -- Position of the picker window
+      winborder = "single", -- Border style for picker and preview windows
+      keymaps = {
+        preview = "K", -- Key to show preview
+        close = { "q", "<Esc>" }, -- Keys to close the window (can be string or table)
+        select = "<CR>", -- Keys to select action (can be string or table)
+      },
+      custom_keys = {
+        { key = 'm', pattern = 'Fill match arms' },
+        { key = 'r', pattern = 'Rename.*' }, -- Lua pattern matching
+      },
+    },
+  },
+})
+
+vim.keymap.set({ 'n', 'x' }, '<leader>ca', function()
+  require('tiny-code-action').code_action()
+end, { noremap = true, silent = true })
+
+-- vim.keymap.set('n', '<leader>ca', function()
+--   vim.lsp.buf.code_action()
+-- end, { desc = 'Open available code actions' })
+
+vim.lsp.enable('marksman')

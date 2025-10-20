@@ -16,6 +16,7 @@ vim.opt.list = true
 vim.opt.listchars = { trail = '⋅', tab = '│ ' }
 vim.opt.conceallevel = 2
 vim.opt.signcolumn = 'yes'
+vim.opt.equalalways = false
 
 -- Color scheme
 vim.cmd('colorscheme kanagawa')
@@ -84,10 +85,10 @@ vim.g.neoformat_htmlangular_prettierd = {
   stdin = 1,
 }
 
-vim.g.neoformat_enabled_htmlangular = { 'eslint_d' }
-vim.g.neoformat_enabled_javascript = { 'eslint_d' }
-vim.g.neoformat_enabled_typescript = { 'eslint_d' }
-vim.g.neoformat_enabled_typescriptreact = { 'eslint_d' }
+vim.g.neoformat_enabled_htmlangular = { 'biome' }
+vim.g.neoformat_enabled_javascript = { 'biome' }
+vim.g.neoformat_enabled_typescript = { 'biome' }
+vim.g.neoformat_enabled_typescriptreact = { 'biome' }
 
 vim.g.neoformat_enabled_python = { 'ruff' }
 
@@ -270,10 +271,11 @@ vim.keymap.set('n', 'gr', require('telescope.builtin').lsp_references, { buffer 
 --   end,
 -- })
 vim.diagnostic.config({
-  virtual_text = false, -- 👈 this disables the inline error messages
-  signs = true, -- optional: keep signs in the gutter
-  underline = true, -- optional: keep underlines
-  update_in_insert = false, -- optional: don't update in insert mode
+  severity_sort = true,
+  virtual_text = false,
+  signs = true,
+  underline = true,
+  update_in_insert = false,
 })
 vim.o.updatetime = 100
 vim.api.nvim_create_autocmd({ 'CursorHold' }, {
@@ -319,7 +321,79 @@ vim.api.nvim_create_autocmd('ColorScheme', {
   end,
 })
 
+vim.o.splitright = true
 vim.keymap.set('n', '<leader>v', ':vsplit | lua vim.lsp.buf.definition()<CR>')
 vim.keymap.set('n', '<leader>s', ':belowright split | lua vim.lsp.buf.definition()<CR>')
 
-require("colorizer").setup()
+require('colorizer').setup()
+
+-- require('project_nvim').setup {
+--   -- your configuration comes here
+--   -- or leave it empty to use the default settings
+--   -- refer to the configuration section below
+-- }
+
+require('mini.misc').setup {
+  make_global = { 'put', 'put_text', 'setup_auto_root' },
+}
+
+require('package-info').setup {
+  autostart = true,
+}
+
+require('package-info').setup()
+require('telescope').load_extension('package_info')
+
+require('guess-indent').setup {}
+
+require('gitsigns').setup {
+  signs = {
+    add = { text = '┃' },
+    change = { text = '┃' },
+    delete = { text = '_' },
+    topdelete = { text = '‾' },
+    changedelete = { text = '~' },
+    untracked = { text = '┆' },
+  },
+  signs_staged = {
+    add = { text = '┃' },
+    change = { text = '┃' },
+    delete = { text = '_' },
+    topdelete = { text = '‾' },
+    changedelete = { text = '~' },
+    untracked = { text = '┆' },
+  },
+  signs_staged_enable = true,
+  signcolumn = true, -- Toggle with `:Gitsigns toggle_signs`
+  numhl = false, -- Toggle with `:Gitsigns toggle_numhl`
+  linehl = false, -- Toggle with `:Gitsigns toggle_linehl`
+  word_diff = false, -- Toggle with `:Gitsigns toggle_word_diff`
+  watch_gitdir = {
+    follow_files = true,
+  },
+  auto_attach = true,
+  attach_to_untracked = false,
+  current_line_blame = false, -- Toggle with `:Gitsigns toggle_current_line_blame`
+  current_line_blame_opts = {
+    virt_text = true,
+    virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
+    delay = 1000,
+    ignore_whitespace = false,
+    virt_text_priority = 100,
+    use_focus = true,
+  },
+  current_line_blame_formatter = '<author>, <author_time:%R> - <summary>',
+  sign_priority = 6,
+  update_debounce = 100,
+  status_formatter = nil, -- Use default
+  max_file_length = 40000, -- Disable if file is longer than this (in lines)
+  preview_config = {
+    -- Options passed to nvim_open_win
+    style = 'minimal',
+    relative = 'cursor',
+    row = 0,
+    col = 1,
+  },
+}
+
+vim.keymap.set('n', '<leader>gb', '<cmd>Gitsigns blame<CR>')
