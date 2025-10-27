@@ -397,3 +397,9 @@ require('gitsigns').setup {
 }
 
 vim.keymap.set('n', '<leader>gb', '<cmd>Gitsigns blame<CR>')
+
+-- require("heirline").setup({})
+
+-- require("bufferline").setup{}
+
+require('luatab').setup{}

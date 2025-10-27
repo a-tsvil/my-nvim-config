@@ -132,27 +132,27 @@ vim.lsp.config('angularls', {
 
 -- vim.lsp.enable('phpactor')
 
-vim.lsp.config('rust_analyzer', {
-  settings = {
-    ['rust-analyzer'] = {
-      cargo = {
-        allFeatures = true,
-      },
-      checkOnSave = {
-        command = 'clippy',
-      },
-    },
-  },
-  -- on_attach = function(client, bufnr)
-  --   -- Optional: key mappings for LSP
-  --   local bufopts = { noremap = true, silent = true, buffer = bufnr }
-  --   vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-  --   vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-  --   vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
-  -- end,
-  capabilities = require('cmp_nvim_lsp').default_capabilities(),
-})
-vim.lsp.enable('rust_analyzer')
+-- vim.lsp.config('rust_analyzer', {
+--   settings = {
+--     ['rust-analyzer'] = {
+--       cargo = {
+--         allFeatures = true,
+--       },
+--       checkOnSave = {
+--         command = 'clippy',
+--       },
+--     },
+--   },
+--   -- on_attach = function(client, bufnr)
+--   --   -- Optional: key mappings for LSP
+--   --   local bufopts = { noremap = true, silent = true, buffer = bufnr }
+--   --   vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+--   --   vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+--   --   vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, bufopts)
+--   -- end,
+--   capabilities = require('cmp_nvim_lsp').default_capabilities(),
+-- })
+-- vim.lsp.enable('rust_analyzer')
 
 vim.lsp.enable('sqls')
 -- lspconfig.gleam.setup{}
@@ -188,7 +188,7 @@ vim.lsp.config('jsonls', {
 })
 vim.lsp.enable('jsonls')
 
-vim.lsp.enable('tailwindcss')
+-- vim.lsp.enable('tailwindcss')
 
 vim.lsp.enable('kotlin_lsp')
 

@@ -76,6 +76,10 @@ call plug#begin('~/.nvim/plugin')
     Plug 'vuki656/package-info.nvim'
     Plug 'nmac427/guess-indent.nvim'
     Plug 'lewis6991/gitsigns.nvim'
+    Plug 'mrcjkb/rustaceanvim'
+    " Plug 'rebelot/heirline.nvim'
+    " Plug 'akinsho/bufferline.nvim'
+    Plug 'alvarosevilla95/luatab.nvim'
 call plug#end()
 
 :lua require('config')
