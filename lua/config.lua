@@ -98,36 +98,12 @@ require('lualine-setup')
 require('nvim-cmp-config')
 require('folding')
 require('nvim-tree-config')
+require('tree-sitter')
 -- require('cursor')
 
 -- vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep:|,foldclose:]]
 vim.opt.fillchars = { eob = ' ', fold = ' ', foldopen = '', foldclose = '' }
 vim.opt.list = true
-
-require('nvim-treesitter.configs').setup({
-  highlight = { enable = true, disable = { 'vim', 'txt', 'help' } },
-  ensure_installed = {
-    'lua',
-    'rust',
-    'javascript',
-    'typescript',
-    'tsx',
-    'json',
-    'go',
-    'yaml',
-    'vim',
-    'vimdoc',
-    'php',
-    'sql',
-    'html',
-    'angular',
-    'kotlin',
-  },
-  indent = { enable = true },
-})
-
--- vim.treesitter.language.add("gleam", { path = "/home/diodredd/tree-sitters/tree-sitter-gleam/gleam.so" })
--- vim.treesitter.language.add("kotlin", { path = "/home/diodredd/tree-sitters/tree-sitter-kotlin/kotlin.so" })
 
 local highlight = {
   'RainbowRed',
