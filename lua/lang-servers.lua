@@ -75,31 +75,31 @@ vim.lsp.config('ts_ls', {
       completions = {
         completeFunctionCalls = true,
       },
-      inlayHints = {
-        includeInlayParameterNameHints = 'all', -- 'none' | 'literals' | 'all'
-        includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-        includeInlayVariableTypeHints = false,
-        includeInlayFunctionParameterTypeHints = false,
-        includeInlayVariableTypeHintsWhenTypeMatchesName = false,
-        includeInlayPropertyDeclarationTypeHints = true,
-        includeInlayFunctionLikeReturnTypeHints = true,
-        includeInlayEnumMemberValueHints = true,
-      },
+      -- inlayHints = {
+      --   includeInlayParameterNameHints = 'all', -- 'none' | 'literals' | 'all'
+      --   includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+      --   includeInlayVariableTypeHints = false,
+      --   includeInlayFunctionParameterTypeHints = false,
+      --   includeInlayVariableTypeHintsWhenTypeMatchesName = false,
+      --   includeInlayPropertyDeclarationTypeHints = true,
+      --   includeInlayFunctionLikeReturnTypeHints = true,
+      --   includeInlayEnumMemberValueHints = true,
+      -- },
     },
     javascript = {
       completions = {
         completeFunctionCalls = true,
       },
-      inlayHints = {
-        includeInlayParameterNameHints = 'all', -- 'none' | 'literals' | 'all'
-        includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-        includeInlayVariableTypeHints = false,
-        includeInlayFunctionParameterTypeHints = true,
-        includeInlayVariableTypeHintsWhenTypeMatchesName = true,
-        includeInlayPropertyDeclarationTypeHints = true,
-        includeInlayFunctionLikeReturnTypeHints = true,
-        includeInlayEnumMemberValueHints = true,
-      },
+      -- inlayHints = {
+      --   includeInlayParameterNameHints = 'all', -- 'none' | 'literals' | 'all'
+      --   includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+      --   includeInlayVariableTypeHints = false,
+      --   includeInlayFunctionParameterTypeHints = true,
+      --   includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+      --   includeInlayPropertyDeclarationTypeHints = true,
+      --   includeInlayFunctionLikeReturnTypeHints = true,
+      --   includeInlayEnumMemberValueHints = true,
+      -- },
     },
   },
 })
@@ -196,20 +196,20 @@ vim.lsp.enable('vacuum')
 
 vim.lsp.enable('biome')
 
-require("tiny-code-action").setup({
+require('tiny-code-action').setup({
   picker = {
-    "buffer",
+    'buffer',
     opts = {
       hotkeys = true, -- Enable hotkeys for quick selection of actions
-      hotkeys_mode = "text_diff_based", -- Modes for generating hotkeys
+      hotkeys_mode = 'text_diff_based', -- Modes for generating hotkeys
       auto_preview = false, -- Enable or disable automatic preview
       auto_accept = false, -- Automatically accept the selected action (with hotkeys)
-      position = "cursor", -- Position of the picker window
-      winborder = "single", -- Border style for picker and preview windows
+      position = 'cursor', -- Position of the picker window
+      winborder = 'single', -- Border style for picker and preview windows
       keymaps = {
-        preview = "K", -- Key to show preview
-        close = { "q", "<Esc>" }, -- Keys to close the window (can be string or table)
-        select = "<CR>", -- Keys to select action (can be string or table)
+        preview = 'K', -- Key to show preview
+        close = { 'q', '<Esc>' }, -- Keys to close the window (can be string or table)
+        select = '<CR>', -- Keys to select action (can be string or table)
       },
       custom_keys = {
         { key = 'm', pattern = 'Fill match arms' },
@@ -228,3 +228,90 @@ end, { noremap = true, silent = true })
 -- end, { desc = 'Open available code actions' })
 
 vim.lsp.enable('marksman')
+
+-- Show full type / interface / alias of symbol under cursor in a float
+local function show_full_type()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local clients = vim.lsp.get_clients({ bufnr = bufnr })
+  if #clients == 0 then
+    vim.notify('No LSP client attached', vim.log.levels.WARN)
+    return
+  end
+
+  local client = clients[1]
+  local params = vim.lsp.util.make_position_params(0, client.offset_encoding)
+
+  vim.lsp.buf_request(bufnr, 'textDocument/typeDefinition', params, function(err, result)
+    if err then
+      vim.notify('LSP error: ' .. err.message, vim.log.levels.ERROR)
+      return
+    end
+    if not result or vim.tbl_isempty(result) then
+      vim.notify('No type definition found', vim.log.levels.INFO)
+      return
+    end
+
+    local loc = result[1]
+    local uri = loc.uri or loc.targetUri
+    local def_buf = vim.uri_to_bufnr(uri)
+    vim.fn.bufload(def_buf)
+
+    -- tsserver can return different shapes (Location / LocationLink)
+    local range = loc.range or loc.targetRange or loc.targetSelectionRange
+    if not range then
+      vim.notify('No range in type definition result', vim.log.levels.WARN)
+      return
+    end
+
+    local start_line = range.start.line
+
+    -- read from the definition line to the end of file
+    local lines = vim.api.nvim_buf_get_lines(def_buf, start_line, -1, false)
+    if not lines or #lines == 0 then
+      vim.notify('Could not read type definition lines', vim.log.levels.WARN)
+      return
+    end
+
+    local extracted = {}
+    local brace_depth = 0
+    local seen_braces = false
+
+    for i, line in ipairs(lines) do
+      table.insert(extracted, line)
+
+      -- count braces on this line
+      local opens = select(2, line:gsub('{', ''))
+      local closes = select(2, line:gsub('}', ''))
+      if opens > 0 or closes > 0 then
+        seen_braces = true
+      end
+      brace_depth = brace_depth + opens - closes
+
+      local trimmed = vim.trim(line)
+
+      -- case 1: alias without braces, ended by semicolon
+      if not seen_braces and trimmed:match(';$') then
+        break
+      end
+
+      -- case 2: block type (interface / type / class / whatever) ended when braces balanced again
+      if seen_braces and brace_depth == 0 then
+        break
+      end
+
+      -- safety guard so we don't dump entire file if something goes weird
+      if i > 120 then
+        break
+      end
+    end
+
+    vim.lsp.util.open_floating_preview(extracted, vim.bo.filetype, {
+      border = 'rounded',
+      max_width = 100,
+    })
+  end)
+end
+
+vim.keymap.set('n', '<leader>ti', show_full_type, {
+  desc = 'Show full internal type definition',
+})
