@@ -189,7 +189,19 @@ vim.lsp.config('jsonls', {
 vim.lsp.enable('jsonls')
 
 -- vim.lsp.enable('tailwindcss')
+--
+local util = require('lspconfig.util')
 
+-- vim.lsp.config('kotlin_lsp', {
+--   cmd = { 'kotlin-lsp', '--stdio' },
+--   filetypes = { 'kotlin' },
+
+--   root_dir = function(fname)
+--     return util.root_pattern('settings.gradle.kts', 'settings.gradle', 'build.gradle.kts', 'build.gradle')(fname)
+--       or util.root_pattern('.git')(fname)
+--       or util.path.dirname(fname)
+--   end,
+-- })
 vim.lsp.enable('kotlin_lsp')
 
 vim.lsp.enable('vacuum')
@@ -315,3 +327,5 @@ end
 vim.keymap.set('n', '<leader>ti', show_full_type, {
   desc = 'Show full internal type definition',
 })
+
+vim.lsp.enable('bashls')

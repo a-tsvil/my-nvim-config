@@ -45,7 +45,28 @@ if vim.g.neovide then
 end
 
 -- File history mapping
-vim.keymap.set('n', '<leader>m', ':History<CR>', { silent = true })
+--
+-- vim.g.fzf_history_options = '--with-nth=-1'
+-- vim.keymap.set('n', '<leader>m', ':History<CR>', { silent = true })
+-- vim.cmd([[
+-- command! -bang -nargs=* History
+--       \ call fzf#vim#history({
+--       \   'options': ['--delimiter=/', '--with-nth=-3..-1']
+--       \ }, <bang>0)
+-- ]])
+-- vim.keymap.set(
+--   'n',
+--   '<leader>m',
+--   ':History! -- --delimiter=/ --with-nth=-1<CR>',
+--   { silent = true }
+-- )
+local builtin = require('telescope.builtin')
+vim.keymap.set('n', '<leader>m', function()
+  builtin.oldfiles({
+    path_display = { "smart" },
+    previewer = true,
+  })
+end, { silent = true })
 
 -- NvimTree mappings
 vim.g.NERDTreeShowHidden = 1
@@ -85,10 +106,15 @@ vim.g.neoformat_htmlangular_prettierd = {
   stdin = 1,
 }
 
-vim.g.neoformat_enabled_htmlangular = { 'biome' }
-vim.g.neoformat_enabled_javascript = { 'biome' }
-vim.g.neoformat_enabled_typescript = { 'biome' }
-vim.g.neoformat_enabled_typescriptreact = { 'biome' }
+-- vim.g.neoformat_enabled_htmlangular = { 'biome' }
+-- vim.g.neoformat_enabled_javascript = { 'biome' }
+-- vim.g.neoformat_enabled_typescript = { 'biome' }
+-- vim.g.neoformat_enabled_typescriptreact = { 'biome' }
+
+vim.g.neoformat_enabled_htmlangular = { 'eslint_d' }
+vim.g.neoformat_enabled_javascript = { 'eslint_d' }
+vim.g.neoformat_enabled_typescript = { 'eslint_d' }
+vim.g.neoformat_enabled_typescriptreact = { 'eslint_d' }
 
 vim.g.neoformat_enabled_python = { 'ruff' }
 
@@ -378,4 +404,45 @@ vim.keymap.set('n', '<leader>gb', '<cmd>Gitsigns blame<CR>')
 
 -- require("bufferline").setup{}
 
-require('luatab').setup{}
+require('luatab').setup {}
+
+-- require('overlength').setup({
+--   -- Overlength highlighting enabled by default
+--   enabled = true,
+
+--   -- Colors for OverLength highlight group
+--   colors = {
+--     ctermfg = nil,
+--     ctermbg = 'darkgrey',
+--     fg = nil,
+--     bg = '#8B0000',
+--   },
+
+--   -- Mode to use textwidth local options
+--   -- 0: Don't use textwidth at all, always use config.default_overlength.
+--   -- 1: Use `textwidth, unless it's 0, then use config.default_overlength.
+--   -- 2: Always use textwidth. There will be no highlighting where
+--   --    textwidth == 0, unless added explicitly
+--   textwidth_mode = 2,
+--   -- Default overlength with no filetype
+--   default_overlength = 80,
+--   -- How many spaces past your overlength to start highlighting
+--   grace_length = 1,
+--   -- Highlight only the column or until the end of the line
+--   highlight_to_eol = true,
+
+--   -- List of filetypes to disable overlength highlighting
+--   disable_ft = {
+--     'qf',
+--     'help',
+--     'man',
+--     'checkhealth',
+--     'lazy',
+--     'packer',
+--     'NvimTree',
+--     'Telescope',
+--     'TelescopePrompt',
+--     'TelescopeResults',
+--     'WhichKey',
+--   },
+-- })
