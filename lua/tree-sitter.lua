@@ -22,28 +22,57 @@ vim.api.nvim_create_autocmd('User', {
     }
   end,
 })
+-- Use fwcd/tree-sitter-kotlin (main) as the Kotlin parser source
+local parser_config = require("nvim-treesitter.parsers")
 
-require('nvim-treesitter.config').setup({
-  highlight = { enable = true, disable = { 'vim', 'txt', 'help' } },
-  ensure_installed = {
-    'lua',
-    'rust',
-    'javascript',
-    'typescript',
-    'tsx',
-    'json',
-    'go',
-    'yaml',
-    'vim',
-    'vimdoc',
-    'php',
-    'sql',
-    'html',
-    'angular',
-    'kotlin',
-    'edifact',
+parser_config.kotlin = {
+  install_info = {
+    url = "https://github.com/fwcd/tree-sitter-kotlin",
+    branch = "main",
+    files = { "src/parser.c", "src/scanner.c" },
   },
-  indent = { enable = true },
+  filetype = "kotlin",
+}
+
+-- New nvim-treesitter is used for parser/query installation.
+-- Highlight attachment itself is done via vim.treesitter.start().
+require("nvim-treesitter").setup()
+
+-- Languages you want installed
+local languages = {
+  "lua",
+  "rust",
+  "javascript",
+  "typescript",
+  "tsx",
+  "json",
+  "go",
+  "yaml",
+  "vim",
+  "vimdoc",
+  "php",
+  "sql",
+  "html",
+  -- "angular",
+  "kotlin",
+  "edifact",
+  "groovy",
+  "markdown",
+  "markdown_inline",
+}
+
+-- Install them (async)
+require("nvim-treesitter").install(languages)
+
+local ts_start_group = vim.api.nvim_create_augroup("ConfigTreeSitterStart", { clear = true })
+vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile", "FileType" }, {
+  group = ts_start_group,
+  callback = function(args)
+    if vim.bo[args.buf].buftype ~= "" then
+      return
+    end
+    pcall(vim.treesitter.start, args.buf)
+  end,
 })
 
 -- local parser_config = require('nvim-treesitter.parsers')
@@ -68,3 +97,13 @@ vim.filetype.add {
 
 -- vim.treesitter.language.add("gleam", { path = "/home/diodredd/tree-sitters/tree-sitter-gleam/gleam.so" })
 -- vim.treesitter.language.add("kotlin", { path = "/home/diodredd/tree-sitters/tree-sitter-kotlin/kotlin.so" })
+
+local function apply_treesitter_links()
+  vim.api.nvim_set_hl(0, "@property", { link = "@variable.member" })
+end
+
+apply_treesitter_links()
+
+vim.api.nvim_create_autocmd("ColorScheme", {
+  callback = apply_treesitter_links,
+})

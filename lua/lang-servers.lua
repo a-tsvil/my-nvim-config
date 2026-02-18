@@ -190,18 +190,40 @@ vim.lsp.enable('jsonls')
 
 -- vim.lsp.enable('tailwindcss')
 --
-local util = require('lspconfig.util')
+local kotlin_capabilities = vim.lsp.protocol.make_client_capabilities()
+local has_cmp, cmp_lsp = pcall(require, 'cmp_nvim_lsp')
+if has_cmp then
+  kotlin_capabilities = cmp_lsp.default_capabilities(kotlin_capabilities)
+end
 
--- vim.lsp.config('kotlin_lsp', {
---   cmd = { 'kotlin-lsp', '--stdio' },
---   filetypes = { 'kotlin' },
+vim.g.kotlin_lsp_enable_semantic_tokens = vim.g.kotlin_lsp_enable_semantic_tokens ~= false
 
---   root_dir = function(fname)
---     return util.root_pattern('settings.gradle.kts', 'settings.gradle', 'build.gradle.kts', 'build.gradle')(fname)
---       or util.root_pattern('.git')(fname)
---       or util.path.dirname(fname)
---   end,
--- })
+vim.lsp.config('kotlin_lsp', {
+  capabilities = kotlin_capabilities,
+  single_file_support = true,
+  root_markers = {
+    'settings.gradle',
+    'settings.gradle.kts',
+    'pom.xml',
+    'build.gradle',
+    'build.gradle.kts',
+    'workspace.json',
+    '.git',
+  },
+  on_attach = function(client, bufnr)
+    if client.server_capabilities.inlayHintProvider then
+      local ok = pcall(vim.lsp.inlay_hint.enable, true, { bufnr = bufnr })
+      if not ok then
+        pcall(vim.lsp.inlay_hint.enable, true, bufnr)
+      end
+    end
+
+    if not vim.g.kotlin_lsp_enable_semantic_tokens then
+      -- Optional: keep Tree-sitter as the source of token coloring.
+      client.server_capabilities.semanticTokensProvider = nil
+    end
+  end,
+})
 vim.lsp.enable('kotlin_lsp')
 
 vim.lsp.enable('vacuum')

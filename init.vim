@@ -38,6 +38,7 @@ call plug#begin('~/.nvim/plugin')
     Plug 'rose-pine/neovim'
     Plug 'catppuccin/nvim'
     Plug 'rebelot/kanagawa.nvim'
+    Plug 'sainnhe/everforest'
 
     " Plug 'chrisbra/Colorizer'
     " Plug 'wellle/context.vim'
@@ -80,6 +81,7 @@ call plug#begin('~/.nvim/plugin')
     " Plug 'rebelot/heirline.nvim'
     " Plug 'akinsho/bufferline.nvim'
     Plug 'alvarosevilla95/luatab.nvim'
+    Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npx --yes yarn install' }
 call plug#end()
 
 :lua require('config')
