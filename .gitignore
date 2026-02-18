@@ -2,3 +2,4 @@
 .ccls-cache/
 yarn.lock
 .session.vim
+.nvimlog
