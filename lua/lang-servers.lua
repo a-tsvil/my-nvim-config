@@ -196,10 +196,27 @@ if has_cmp then
   kotlin_capabilities = cmp_lsp.default_capabilities(kotlin_capabilities)
 end
 
-vim.g.kotlin_lsp_enable_semantic_tokens = vim.g.kotlin_lsp_enable_semantic_tokens ~= false
+-- Default to Tree-sitter-driven coloring in Kotlin.
+-- Set this to true (before this file loads) if you want semantic tokens.
+vim.g.kotlin_lsp_enable_semantic_tokens = vim.g.kotlin_lsp_enable_semantic_tokens == true
 
 vim.lsp.config('kotlin_lsp', {
   capabilities = kotlin_capabilities,
+  flags = {
+    -- Reduce request churn during fast typing; helps with stale completion sessions.
+    debounce_text_changes = 150,
+  },
+  handlers = {
+    ['window/showMessage'] = function(err, result, ctx, config)
+      if result and type(result.message) == 'string' then
+        local msg = result.message:lower()
+        if msg:find('completion session expired', 1, true) then
+          return
+        end
+      end
+      return vim.lsp.handlers['window/showMessage'](err, result, ctx, config)
+    end,
+  },
   single_file_support = true,
   root_markers = {
     'settings.gradle',
@@ -221,10 +238,54 @@ vim.lsp.config('kotlin_lsp', {
     if not vim.g.kotlin_lsp_enable_semantic_tokens then
       -- Optional: keep Tree-sitter as the source of token coloring.
       client.server_capabilities.semanticTokensProvider = nil
+      if vim.lsp.semantic_tokens and vim.lsp.semantic_tokens.stop then
+        pcall(vim.lsp.semantic_tokens.stop, bufnr, client.id)
+      end
     end
   end,
 })
 vim.lsp.enable('kotlin_lsp')
+
+-- TODO(future): Re-enable attach/detach notifications once duplicate events
+-- and UX are finalized.
+-- vim.g.lsp_attach_notifications = vim.g.lsp_attach_notifications ~= false
+-- vim.g.lsp_detach_notifications = vim.g.lsp_detach_notifications == true
+-- local lsp_notify_group = vim.api.nvim_create_augroup('ConfigLspAttachNotify', { clear = true })
+-- local lsp_seen_attaches = {}
+-- vim.api.nvim_create_autocmd('LspAttach', {
+--   group = lsp_notify_group,
+--   callback = function(args)
+--     if not vim.g.lsp_attach_notifications then
+--       return
+--     end
+--     local client = vim.lsp.get_client_by_id(args.data.client_id)
+--     if client then
+--       local bufname = vim.api.nvim_buf_get_name(args.buf)
+--       local path = vim.fs.normalize(bufname)
+--       local key = string.format('%s:%s', client.name or tostring(args.data.client_id), path)
+--       if lsp_seen_attaches[key] then
+--         return
+--       end
+--       lsp_seen_attaches[key] = true
+--       local short = vim.fn.fnamemodify(bufname, ':t')
+--       vim.notify(string.format('LSP attached: %s -> %s', client.name, short), vim.log.levels.INFO)
+--     end
+--   end,
+-- })
+-- vim.api.nvim_create_autocmd('LspDetach', {
+--   group = lsp_notify_group,
+--   callback = function(args)
+--     if not vim.g.lsp_detach_notifications then
+--       return
+--     end
+--     local client = vim.lsp.get_client_by_id(args.data.client_id)
+--     if client then
+--       local bufname = vim.api.nvim_buf_get_name(args.buf)
+--       local short = vim.fn.fnamemodify(bufname, ':t')
+--       vim.notify(string.format('LSP detached: %s -> %s', client.name, short), vim.log.levels.INFO)
+--     end
+--   end,
+-- })
 
 vim.lsp.enable('vacuum')
 
@@ -256,10 +317,6 @@ require('tiny-code-action').setup({
 vim.keymap.set({ 'n', 'x' }, '<leader>ca', function()
   require('tiny-code-action').code_action()
 end, { noremap = true, silent = true })
-
--- vim.keymap.set('n', '<leader>ca', function()
---   vim.lsp.buf.code_action()
--- end, { desc = 'Open available code actions' })
 
 vim.lsp.enable('marksman')
 

@@ -240,16 +240,23 @@ require('nvim-ts-autotag').setup({
 })
 
 require('telescope').setup({
-  file_ignore_patterns = {
-    'node_modules/',
-    '%.git/',
-    'dist/',
-    'build/',
-    'venv/',
+  defaults = {
+    file_ignore_patterns = {
+      'node_modules/',
+      '%.git/',
+      'dist/',
+      'build/',
+      'venv/',
+    },
   },
   pickers = {
     find_files = {
       hidden = true,
+      path_display = {
+        'filename_first',
+        shorten = { len = 1, exclude = { 1, -1 } },
+        truncate = 3,
+      },
     },
   },
 })

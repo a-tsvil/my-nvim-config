@@ -11,7 +11,7 @@
 --     vim.treesitter.start(args.buf, "edifact")
 --   end,
 -- })
---
+
 vim.api.nvim_create_autocmd('User', {
   pattern = 'TSUpdate',
   callback = function()
@@ -22,9 +22,10 @@ vim.api.nvim_create_autocmd('User', {
     }
   end,
 })
--- Use fwcd/tree-sitter-kotlin (main) as the Kotlin parser source
+
 local parser_config = require("nvim-treesitter.parsers")
 
+-- NOTE: for now building kotlin parser directly from sources fwcd/tree-sitter-kotlin (#main) for last changes
 parser_config.kotlin = {
   install_info = {
     url = "https://github.com/fwcd/tree-sitter-kotlin",
@@ -34,11 +35,10 @@ parser_config.kotlin = {
   filetype = "kotlin",
 }
 
--- New nvim-treesitter is used for parser/query installation.
--- Highlight attachment itself is done via vim.treesitter.start().
-require("nvim-treesitter").setup()
+require("nvim-treesitter").setup({
+  install_dir = vim.fs.joinpath(vim.fn.stdpath("data"), "site"),
+})
 
--- Languages you want installed
 local languages = {
   "lua",
   "rust",
@@ -46,6 +46,8 @@ local languages = {
   "typescript",
   "tsx",
   "json",
+  "java",
+  "javadoc",
   "go",
   "yaml",
   "vim",
@@ -61,17 +63,27 @@ local languages = {
   "markdown_inline",
 }
 
--- Install them (async)
 require("nvim-treesitter").install(languages)
 
+-- Centralized Tree-sitter attach point.
+-- We intentionally keep this in one place instead of per-filetype ftplugins so
+-- Kotlin/TS and other languages behave consistently.
 local ts_start_group = vim.api.nvim_create_augroup("ConfigTreeSitterStart", { clear = true })
-vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile", "FileType" }, {
+vim.api.nvim_create_autocmd("FileType", {
   group = ts_start_group,
   callback = function(args)
     if vim.bo[args.buf].buftype ~= "" then
       return
     end
-    pcall(vim.treesitter.start, args.buf)
+    if vim.b[args.buf].ts_started then
+      return
+    end
+
+    local ok = pcall(vim.treesitter.start, args.buf)
+    if not ok then
+      return
+    end
+    vim.b[args.buf].ts_started = true
   end,
 })
 
