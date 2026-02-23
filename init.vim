@@ -23,6 +23,7 @@ call plug#begin('~/.nvim/plugin')
     Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
     Plug 'saadparwaiz1/cmp_luasnip'
     Plug 'L3MON4D3/LuaSnip'
+    Plug 'Jezda1337/nvim-html-css'
 
     Plug 'neovim/nvim-lspconfig'
     Plug 'ray-x/lsp_signature.nvim'

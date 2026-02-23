@@ -126,6 +126,7 @@ require('nvim-cmp-config')
 require('folding')
 require('nvim-tree-config')
 require('tree-sitter')
+require('html-css-config')
 require('git-signs')
 -- require('cursor')
 
@@ -287,6 +288,9 @@ vim.diagnostic.config({
   signs = true,
   underline = true,
   update_in_insert = false,
+  float = {
+    border = 'single',
+  },
 })
 vim.o.updatetime = 100
 vim.api.nvim_create_autocmd({ 'CursorHold' }, {
@@ -300,6 +304,7 @@ vim.api.nvim_create_autocmd({ 'CursorHold' }, {
     vim.diagnostic.open_float {
       scope = 'cursor',
       focusable = false,
+      border = 'single',
       close_events = {
         'CursorMoved',
         'CursorMovedI',

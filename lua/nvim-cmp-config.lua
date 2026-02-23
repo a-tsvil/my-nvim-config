@@ -26,7 +26,13 @@ cmp.setup {
     completeopt = 'menu,menuone,noinsert,noselect',
   },
   window = {
-    completion = cmp.config.window.bordered(),
+    completion = {
+      border = 'solid',
+      scrollbar = '║',
+    },
+    documentation = {
+      border = 'solid',
+    },
   },
   mapping = cmp.mapping.preset.insert({
     ['<C-u>'] = cmp.mapping.scroll_docs(-4), -- Up

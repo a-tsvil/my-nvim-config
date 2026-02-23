@@ -397,7 +397,7 @@ local function show_full_type()
     end
 
     vim.lsp.util.open_floating_preview(extracted, vim.bo.filetype, {
-      border = 'rounded',
+      border = 'single',
       max_width = 100,
     })
   end)
@@ -408,3 +408,13 @@ vim.keymap.set('n', '<leader>ti', show_full_type, {
 })
 
 vim.lsp.enable('bashls')
+
+local lsp_float_border = 'solid' -- "single" | "double" | "rounded" | "solid" | "shadow" | "none"
+
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(args)
+    vim.keymap.set('n', 'K', function()
+      vim.lsp.buf.hover({ border = lsp_float_border })
+    end, { buffer = args.buf, silent = true, desc = 'LSP hover' })
+  end,
+})
