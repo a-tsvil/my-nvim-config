@@ -69,12 +69,6 @@ vim.keymap.set('n', '<leader>m', function()
   })
 end, { silent = true })
 
--- NvimTree mappings
-vim.g.NERDTreeShowHidden = 1
-vim.keymap.set('n', '<leader>r', ':NvimTreeFindFile<CR>')
-vim.keymap.set('n', '<leader>nf', ':NvimTreeFindFile<CR>')
-vim.keymap.set('n', '<leader>nvt', ':NvimTreeOpen<CR>')
-
 -- Rust formatting
 vim.keymap.set('n', 'rf', ':%! rustfmt<CR>')
 
@@ -107,15 +101,15 @@ vim.g.neoformat_htmlangular_prettierd = {
   stdin = 1,
 }
 
--- vim.g.neoformat_enabled_htmlangular = { 'biome' }
--- vim.g.neoformat_enabled_javascript = { 'biome' }
--- vim.g.neoformat_enabled_typescript = { 'biome' }
--- vim.g.neoformat_enabled_typescriptreact = { 'biome' }
+vim.g.neoformat_enabled_htmlangular = { 'biome' }
+vim.g.neoformat_enabled_javascript = { 'biome' }
+vim.g.neoformat_enabled_typescript = { 'biome' }
+vim.g.neoformat_enabled_typescriptreact = { 'biome' }
 
-vim.g.neoformat_enabled_htmlangular = { 'eslint_d' }
-vim.g.neoformat_enabled_javascript = { 'eslint_d' }
-vim.g.neoformat_enabled_typescript = { 'eslint_d' }
-vim.g.neoformat_enabled_typescriptreact = { 'eslint_d' }
+-- vim.g.neoformat_enabled_htmlangular = { 'eslint_d' }
+-- vim.g.neoformat_enabled_javascript = { 'eslint_d' }
+-- vim.g.neoformat_enabled_typescript = { 'eslint_d' }
+-- vim.g.neoformat_enabled_typescriptreact = { 'eslint_d' }
 
 vim.g.neoformat_enabled_python = { 'ruff' }
 
@@ -404,3 +398,8 @@ require('luatab').setup {}
 --     'WhichKey',
 --   },
 -- })
+
+vim.keymap.set('n', '<leader>tt', '<cmd>tabe | term<CR>')
+vim.keymap.set('n', '<leader>ts', '<cmd>vs | term<CR>')
+vim.keymap.set('n', '<leader>tti', '<cmd>tabe | term<CR>i')
+vim.keymap.set('n', '<leader>tsi', '<cmd>vs | term<CR>i')

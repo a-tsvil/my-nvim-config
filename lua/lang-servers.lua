@@ -157,7 +157,7 @@ vim.lsp.config('angularls', {
 vim.lsp.enable('sqls')
 -- lspconfig.gleam.setup{}
 
--- vim.lsp.enable('prismals')
+vim.lsp.enable('prismals')
 
 --Enable (broadcasting) snippet capability for completion
 local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -418,3 +418,5 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end, { buffer = args.buf, silent = true, desc = 'LSP hover' })
   end,
 })
+
+vim.lsp.enable('hyprls')
