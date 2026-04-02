@@ -83,6 +83,7 @@ call plug#begin('~/.nvim/plugin')
     " Plug 'akinsho/bufferline.nvim'
     Plug 'alvarosevilla95/luatab.nvim'
     Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npx --yes yarn install' }
+    Plug 'mason-org/mason.nvim'
 call plug#end()
 
 :lua require('config')

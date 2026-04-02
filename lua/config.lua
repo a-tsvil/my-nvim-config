@@ -122,6 +122,7 @@ require('nvim-tree-config')
 require('tree-sitter')
 require('html-css-config')
 require('git-signs')
+require('mason-config')
 -- require('cursor')
 
 -- vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep:|,foldclose:]]

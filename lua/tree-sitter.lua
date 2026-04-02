@@ -12,16 +12,16 @@
 --   end,
 -- })
 
-vim.api.nvim_create_autocmd('User', {
-  pattern = 'TSUpdate',
-  callback = function()
-    require('nvim-treesitter.parsers').edifact = {
-      install_info = {
-        path = '~/Projects/tree-sitter-edifact-vda4945',
-      },
-    }
-  end,
-})
+-- vim.api.nvim_create_autocmd('User', {
+--   pattern = 'TSUpdate',
+--   callback = function()
+--     require('nvim-treesitter.parsers').edifact = {
+--       install_info = {
+--         path = '~/Projects/tree-sitter-edifact-vda4945',
+--       },
+--     }
+--   end,
+-- })
 
 local parser_config = require("nvim-treesitter.parsers")
 
@@ -55,10 +55,11 @@ local languages = {
   "php",
   "sql",
   "html",
+  "css",
   -- "angular",
   "kotlin",
-  "edifact",
-  "groovy",
+  -- "edifact",
+  -- "groovy",
   "markdown",
   "markdown_inline",
 }
@@ -97,15 +98,15 @@ vim.api.nvim_create_autocmd("FileType", {
 --   filetype = 'edifact',
 -- }
 
-vim.treesitter.language.register('edifact', { 'edi', 'edifact', 'iftsta' })
+-- vim.treesitter.language.register('edifact', { 'edi', 'edifact', 'iftsta' })
 
-vim.filetype.add {
-  extension = {
-    edi = 'edifact',
-    edifact = 'edifact',
-    itfsta = 'edifact',
-  },
-}
+-- vim.filetype.add {
+--   extension = {
+--     edi = 'edifact',
+--     edifact = 'edifact',
+--     itfsta = 'edifact',
+--   },
+-- }
 
 -- vim.treesitter.language.add("gleam", { path = "/home/diodredd/tree-sitters/tree-sitter-gleam/gleam.so" })
 -- vim.treesitter.language.add("kotlin", { path = "/home/diodredd/tree-sitters/tree-sitter-kotlin/kotlin.so" })
