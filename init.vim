@@ -69,7 +69,6 @@ call plug#begin('~/.nvim/plugin')
     Plug 'nvim-tree/nvim-tree.lua'
     Plug 'windwp/nvim-autopairs'
     Plug 'windwp/nvim-ts-autotag'
-    " Plug 'williamboman/mason.nvim'
     Plug 'glacambre/firenvim', { 'do': { _ -> firenvim#install(0) } }
     " Plug 'dense-analysis/ale'
     Plug 'rachartier/tiny-code-action.nvim'
@@ -84,6 +83,11 @@ call plug#begin('~/.nvim/plugin')
     Plug 'alvarosevilla95/luatab.nvim'
     Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npx --yes yarn install' }
     Plug 'mason-org/mason.nvim'
+    Plug 'sindrets/diffview.nvim'
+
+    Plug 'folke/noice.nvim'
+    Plug 'MunifTanjim/nui.nvim'
+    Plug 'rcarriga/nvim-notify'
 call plug#end()
 
 :lua require('config')

@@ -17,6 +17,7 @@ vim.opt.listchars = { trail = '⋅', tab = '│ ' }
 vim.opt.conceallevel = 2
 vim.opt.signcolumn = 'yes'
 vim.opt.equalalways = false
+vim.opt.termguicolors = true
 
 -- Color scheme
 -- vim.cmd('colorscheme kanagawa')
@@ -29,6 +30,7 @@ vim.g.nord_italic = false
 vim.g.nord_uniform_diff_background = true
 vim.g.nord_bold = false
 vim.g.nord_cursorline_transparent = true
+
 
 -- Colorizer
 vim.g.colorizer_auto_filetype = 'css,scss,html,js,jsx,ts,tsx,svelte'
@@ -404,3 +406,22 @@ vim.keymap.set('n', '<leader>tt', '<cmd>tabe | term<CR>')
 vim.keymap.set('n', '<leader>ts', '<cmd>vs | term<CR>')
 vim.keymap.set('n', '<leader>tti', '<cmd>tabe | term<CR>i')
 vim.keymap.set('n', '<leader>tsi', '<cmd>vs | term<CR>i')
+
+require("noice").setup({
+  lsp = {
+    -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+    override = {
+      ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+      ["vim.lsp.util.stylize_markdown"] = true,
+      ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
+    },
+  },
+  -- you can enable a preset for easier configuration
+  presets = {
+    bottom_search = true, -- use a classic bottom cmdline for search
+    command_palette = true, -- position the cmdline and popupmenu together
+    long_message_to_split = true, -- long messages will be sent to a split
+    inc_rename = false, -- enables an input dialog for inc-rename.nvim
+    lsp_doc_border = false, -- add a border to hover docs and signature help
+  },
+})
