@@ -86,8 +86,8 @@ vim.g.ctrlp_cmd = 'CtrlP'
 -- Neoformat config
 vim.g.neoformat_try_node_exe = 1
 -- vim.g.neoformat_verbose = 1
-vim.keymap.set('n', '<leader>fm', ':Neoformat<CR>')
-vim.keymap.set('n', '<leader>fmp', ':Neoformat prettier<CR>')
+vim.keymap.set('n', '<leader>fm', '<cmd>Neoformat<CR>')
+vim.keymap.set('n', '<leader>fmp', '<cmd>Neoformat prettier<CR>')
 
 vim.g.neoformat_php_phpcsfixer = {
   exe = './vendor/bin/php-cs-fixer',
@@ -234,8 +234,51 @@ require('nvim-ts-autotag').setup({
   --   ['html'] = {
   --     enable_close = false,
   --   },
-  -- },
+	-- },
 })
+
+local telescope_previewers = require('telescope.previewers')
+local has_delta = vim.fn.executable('delta') == 1
+
+local telescope_pickers = {
+  find_files = {
+    hidden = true,
+    path_display = {
+      'filename_first',
+      shorten = { len = 1, exclude = { 1, -1 } },
+      truncate = 3,
+    },
+  },
+}
+
+if has_delta then
+  telescope_pickers.git_status = {
+    previewer = telescope_previewers.new_termopen_previewer({
+      title = 'Delta Git Diff',
+      get_command = function(entry)
+        if not entry or not entry.value then
+          return { 'echo', 'No file selected' }
+        end
+
+        local status = entry.status or ''
+        local file_path = entry.path or entry.value
+        local diff_cmd = 'git --no-pager diff --no-ext-diff HEAD -- "$1" | delta --paging=always --pager="less -R"'
+
+        if status == '??' or status:sub(1, 1) == 'A' then
+          diff_cmd = 'git --no-pager diff --no-index -- /dev/null "$1" | delta --paging=always --pager="less -R"'
+        end
+
+        return {
+          'sh',
+          '-c',
+          diff_cmd,
+          'sh',
+          file_path,
+        }
+      end,
+    }),
+  }
+end
 
 require('telescope').setup({
   defaults = {
@@ -247,16 +290,7 @@ require('telescope').setup({
       'venv/',
     },
   },
-  pickers = {
-    find_files = {
-      hidden = true,
-      path_display = {
-        'filename_first',
-        shorten = { len = 1, exclude = { 1, -1 } },
-        truncate = 3,
-      },
-    },
-  },
+  pickers = telescope_pickers,
 })
 -- Telescope keymaps
 vim.keymap.set('n', '<leader>ff', '<cmd>Telescope find_files<CR>')
@@ -264,6 +298,11 @@ vim.keymap.set('n', '<leader>fg', '<cmd>Telescope live_grep<CR>')
 vim.keymap.set('n', '<leader>fb', '<cmd>Telescope buffers<CR>')
 vim.keymap.set('n', '<leader>fh', '<cmd>Telescope help_tags<CR>')
 vim.keymap.set('n', '<leader>fs', '<cmd>Telescope git_status<CR>')
+vim.keymap.set('n', '<leader>gs', function()
+  require('telescope.builtin').git_status({
+    previewer = telescope_previewers.git_file_diff.new({}),
+  })
+end)
 
 vim.keymap.set('n', 'gr', require('telescope.builtin').lsp_references, { buffer = bufnr })
 
@@ -289,12 +328,43 @@ vim.diagnostic.config({
     border = 'single',
   },
 })
+
+local diagnostic_non_blocking_float_filetypes = {
+  noice = true,
+  notify = true,
+}
+
+local function is_non_blocking_notification_float(winid)
+  local ok_cfg, cfg = pcall(vim.api.nvim_win_get_config, winid)
+  if not ok_cfg or not cfg or not cfg.zindex then
+    return false
+  end
+
+  local ok_buf, buf = pcall(vim.api.nvim_win_get_buf, winid)
+  if not ok_buf then
+    return false
+  end
+
+  local ft = vim.bo[buf].filetype
+  if diagnostic_non_blocking_float_filetypes[ft] then
+    return true
+  end
+
+  local winhl = vim.wo[winid].winhl or ''
+  if winhl:find('Notify', 1, true) or winhl:find('Noice', 1, true) then
+    return true
+  end
+
+  return false
+end
+
 vim.o.updatetime = 100
 vim.api.nvim_create_autocmd({ 'CursorHold' }, {
   pattern = '*',
   callback = function()
     for _, winid in pairs(vim.api.nvim_tabpage_list_wins(0)) do
-      if vim.api.nvim_win_get_config(winid).zindex then
+      local cfg = vim.api.nvim_win_get_config(winid)
+      if cfg.zindex and not is_non_blocking_notification_float(winid) then
         return
       end
     end

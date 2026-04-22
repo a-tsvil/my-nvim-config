@@ -1,2 +1,0 @@
-" :CocOutline
-setlocal commentstring={/*\ %s\ */}
