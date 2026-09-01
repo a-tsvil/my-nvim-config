@@ -79,6 +79,10 @@ Plug('folke/noice.nvim')
 Plug('MunifTanjim/nui.nvim')
 Plug('rcarriga/nvim-notify')
 
+Plug('mfussenegger/nvim-lint')
+
+Plug ('HawkinsT/pathfinder.nvim')
+
 vim.fn['plug#end']()
 
 require('config')

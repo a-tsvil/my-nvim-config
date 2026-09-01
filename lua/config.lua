@@ -31,7 +31,6 @@ vim.g.nord_uniform_diff_background = true
 vim.g.nord_bold = false
 vim.g.nord_cursorline_transparent = true
 
-
 -- Colorizer
 vim.g.colorizer_auto_filetype = 'css,scss,html,js,jsx,ts,tsx,svelte'
 
@@ -66,7 +65,7 @@ end
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>m', function()
   builtin.oldfiles({
-    path_display = { "smart" },
+    path_display = { 'smart' },
     previewer = true,
   })
 end, { silent = true })
@@ -125,6 +124,7 @@ require('tree-sitter')
 require('html-css-config')
 require('git-signs')
 require('mason-config')
+require('linters')
 -- require('cursor')
 
 -- vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep:|,foldclose:]]
@@ -234,7 +234,7 @@ require('nvim-ts-autotag').setup({
   --   ['html'] = {
   --     enable_close = false,
   --   },
-	-- },
+  -- },
 })
 
 local telescope_previewers = require('telescope.previewers')
@@ -477,13 +477,13 @@ vim.keymap.set('n', '<leader>ts', '<cmd>vs | term<CR>')
 vim.keymap.set('n', '<leader>tti', '<cmd>tabe | term<CR>i')
 vim.keymap.set('n', '<leader>tsi', '<cmd>vs | term<CR>i')
 
-require("noice").setup({
+require('noice').setup({
   lsp = {
     -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
     override = {
-      ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-      ["vim.lsp.util.stylize_markdown"] = true,
-      ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
+      ['vim.lsp.util.convert_input_to_markdown_lines'] = true,
+      ['vim.lsp.util.stylize_markdown'] = true,
+      ['cmp.entry.get_documentation'] = true, -- requires hrsh7th/nvim-cmp
     },
   },
   -- you can enable a preset for easier configuration
@@ -495,3 +495,57 @@ require("noice").setup({
     lsp_doc_border = false, -- add a border to hover docs and signature help
   },
 })
+require('noice-markdown-fences').setup()
+
+vim.opt.mouse = "a"
+
+require("pathfinder").setup({
+  use_column_numbers = true,
+  reuse_existing_window = true,
+
+  open_mode = function(filepath, line, column)
+    -- Open in the previously focused non-terminal window
+    local previous_win = vim.fn.win_getid(vim.fn.winnr("#"))
+
+    if previous_win ~= 0 and vim.api.nvim_win_is_valid(previous_win) then
+      local previous_buf = vim.api.nvim_win_get_buf(previous_win)
+
+      if vim.bo[previous_buf].buftype ~= "terminal" then
+        vim.api.nvim_set_current_win(previous_win)
+      end
+    end
+
+    vim.cmd("edit " .. filepath)
+
+    if line then
+      vim.api.nvim_win_set_cursor(
+        0,
+        { line, math.max((column or 1) - 1, 0) }
+      )
+    end
+  end,
+})
+
+-- Ctrl-click from Terminal-Normal mode
+vim.keymap.set(
+  "n",
+  "<C-LeftMouse>",
+  "<LeftMouse>gF",
+  {
+    remap = true,
+    silent = true,
+    desc = "Open clicked file",
+  }
+)
+
+-- Ctrl-click while actively using the terminal
+vim.keymap.set(
+  "t",
+  "<C-LeftMouse>",
+  [[<C-\><C-n><LeftMouse>gF]],
+  {
+    remap = true,
+    silent = true,
+    desc = "Open clicked terminal file",
+  }
+)

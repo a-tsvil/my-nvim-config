@@ -111,8 +111,11 @@ vim.api.nvim_create_autocmd("FileType", {
 -- vim.treesitter.language.add("gleam", { path = "/home/diodredd/tree-sitters/tree-sitter-gleam/gleam.so" })
 -- vim.treesitter.language.add("kotlin", { path = "/home/diodredd/tree-sitters/tree-sitter-kotlin/kotlin.so" })
 
+local treesitter_highlight_links = require("treesitter-highlight-links")
+
 local function apply_treesitter_links()
   vim.api.nvim_set_hl(0, "@property", { link = "@variable.member" })
+  treesitter_highlight_links.apply("kotlin")
 end
 
 apply_treesitter_links()
