@@ -201,6 +201,11 @@ end
 vim.g.kotlin_lsp_enable_semantic_tokens = vim.g.kotlin_lsp_enable_semantic_tokens == true
 
 vim.lsp.config('kotlin_lsp', {
+  -- Temporary standalone release; remove cmd to use Mason again.
+  cmd = {
+    vim.fn.stdpath('config') .. '/.local/kotlin-lsp/kotlin-server-263.6379.0/bin/intellij-server',
+    '--stdio',
+  },
   capabilities = kotlin_capabilities,
   flags = {
     -- Reduce request churn during fast typing; helps with stale completion sessions.
@@ -228,6 +233,7 @@ vim.lsp.config('kotlin_lsp', {
     '.git',
   },
   on_attach = function(client, bufnr)
+    require('kotlin-docs').attach(client, bufnr)
     if client.server_capabilities.inlayHintProvider then
       local ok = pcall(vim.lsp.inlay_hint.enable, true, { bufnr = bufnr })
       if not ok then
@@ -286,8 +292,6 @@ vim.lsp.enable('kotlin_lsp')
 --     end
 --   end,
 -- })
-
-vim.lsp.enable('vacuum')
 
 vim.lsp.enable('biome')
 
@@ -420,3 +424,15 @@ vim.api.nvim_create_autocmd('LspAttach', {
 })
 
 vim.lsp.enable('hyprls')
+
+vim.filetype.add {
+  pattern = {
+    ['openapi.*%.ya?ml'] = 'yaml.openapi',
+    ['openapi.*%.json'] = 'json.openapi',
+  },
+}
+
+vim.lsp.enable('vacuum')
+
+
+vim.lsp.enable('ols')

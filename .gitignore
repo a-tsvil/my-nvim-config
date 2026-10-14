@@ -4,3 +4,4 @@ yarn.lock
 .session.vim
 .nvimlog
 .codex
+/.local/kotlin-lsp/

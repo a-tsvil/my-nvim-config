@@ -20,8 +20,8 @@ vim.opt.equalalways = false
 vim.opt.termguicolors = true
 
 -- Color scheme
--- vim.cmd('colorscheme kanagawa')
-vim.cmd('colorscheme everforest')
+vim.cmd('colorscheme kanagawa')
+-- vim.cmd('colorscheme everforest')
 vim.api.nvim_set_hl(0, 'Visual', { reverse = true })
 vim.g.nord_contrast = false
 vim.g.nord_borders = true
@@ -41,7 +41,7 @@ if vim.g.neovide then
   vim.g.neovide_scroll_animation_length = 0.55
   vim.g.neovide_opacity = 0.9
   vim.g.neovide_remember_window_size = true
-  vim.g.neovide_refresh_rate = 2000
+  vim.g.neovide_refresh_rate = 140
   -- vim.g.neovide_fullscreen = true
   -- vim.g.neovide_cursor_vfx_mode = 'sonicboom'
 end
@@ -294,6 +294,7 @@ require('telescope').setup({
 })
 -- Telescope keymaps
 vim.keymap.set('n', '<leader>ff', '<cmd>Telescope find_files<CR>')
+vim.keymap.set('n', '<leader>fc', '<cmd>Telescope lsp_document_symbols<CR>')
 vim.keymap.set('n', '<leader>fg', '<cmd>Telescope live_grep<CR>')
 vim.keymap.set('n', '<leader>fb', '<cmd>Telescope buffers<CR>')
 vim.keymap.set('n', '<leader>fh', '<cmd>Telescope help_tags<CR>')
@@ -477,7 +478,14 @@ vim.keymap.set('n', '<leader>ts', '<cmd>vs | term<CR>')
 vim.keymap.set('n', '<leader>tti', '<cmd>tabe | term<CR>i')
 vim.keymap.set('n', '<leader>tsi', '<cmd>vs | term<CR>i')
 
-require('noice').setup({
+require("noice").setup({
+  markdown = {
+    hover = {
+      ["%[.-%]%((%S-)%)"] = function(url)
+        require('kotlin-docs').open_link(url)
+      end,
+    },
+  },
   lsp = {
     -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
     override = {
@@ -549,3 +557,5 @@ vim.keymap.set(
     desc = "Open clicked terminal file",
   }
 )
+
+require('kotlin-docs').setup()
