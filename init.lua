@@ -81,8 +81,25 @@ Plug('rcarriga/nvim-notify')
 
 Plug('mfussenegger/nvim-lint')
 
-Plug ('HawkinsT/pathfinder.nvim')
+Plug('HawkinsT/pathfinder.nvim')
 
 vim.fn['plug#end']()
+
+vim.api.nvim_create_autocmd('VimEnter', {
+  group = vim.api.nvim_create_augroup('DailyPlugUpdate', { clear = true }),
+  callback = function()
+    if #vim.api.nvim_list_uis() == 0 then
+      return
+    end
+    local stamp = vim.fn.stdpath('state') .. '/plug-update-date'
+    local today = vim.fn.strftime('%Y-%m-%d')
+    if vim.fn.filereadable(stamp) == 1 and vim.fn.readfile(stamp)[1] == today then
+      return
+    end
+    vim.fn.mkdir(vim.fn.stdpath('state'), 'p')
+    vim.fn.writefile({ today }, stamp)
+    vim.cmd.PlugUpdate()
+  end,
+})
 
 require('config')
