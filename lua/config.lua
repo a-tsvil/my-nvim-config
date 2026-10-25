@@ -477,11 +477,12 @@ vim.keymap.set('n', '<leader>tt', '<cmd>tabe | term<CR>')
 vim.keymap.set('n', '<leader>ts', '<cmd>vs | term<CR>')
 vim.keymap.set('n', '<leader>tti', '<cmd>tabe | term<CR>i')
 vim.keymap.set('n', '<leader>tsi', '<cmd>vs | term<CR>i')
+vim.keymap.set('n', '<leader>tsc', '<cmd>vs | term<CR>i codex <CR>')
 
-require("noice").setup({
+require('noice').setup({
   markdown = {
     hover = {
-      ["%[.-%]%((%S-)%)"] = function(url)
+      ['%[.-%]%((%S-)%)'] = function(url)
         require('kotlin-docs').open_link(url)
       end,
     },
@@ -505,57 +506,64 @@ require("noice").setup({
 })
 require('noice-markdown-fences').setup()
 
-vim.opt.mouse = "a"
+vim.opt.mouse = 'a'
 
-require("pathfinder").setup({
+require('pathfinder').setup({
   use_column_numbers = true,
   reuse_existing_window = true,
 
   open_mode = function(filepath, line, column)
     -- Open in the previously focused non-terminal window
-    local previous_win = vim.fn.win_getid(vim.fn.winnr("#"))
+    local previous_win = vim.fn.win_getid(vim.fn.winnr('#'))
 
     if previous_win ~= 0 and vim.api.nvim_win_is_valid(previous_win) then
       local previous_buf = vim.api.nvim_win_get_buf(previous_win)
 
-      if vim.bo[previous_buf].buftype ~= "terminal" then
+      if vim.bo[previous_buf].buftype ~= 'terminal' then
         vim.api.nvim_set_current_win(previous_win)
       end
     end
 
-    vim.cmd("edit " .. filepath)
+    vim.cmd('edit ' .. filepath)
 
     if line then
-      vim.api.nvim_win_set_cursor(
-        0,
-        { line, math.max((column or 1) - 1, 0) }
-      )
+      vim.api.nvim_win_set_cursor(0, { line, math.max((column or 1) - 1, 0) })
     end
   end,
 })
 
--- Ctrl-click from Terminal-Normal mode
-vim.keymap.set(
-  "n",
-  "<C-LeftMouse>",
-  "<LeftMouse>gF",
-  {
-    remap = true,
-    silent = true,
-    desc = "Open clicked file",
-  }
-)
-
--- Ctrl-click while actively using the terminal
-vim.keymap.set(
-  "t",
-  "<C-LeftMouse>",
-  [[<C-\><C-n><LeftMouse>gF]],
-  {
-    remap = true,
-    silent = true,
-    desc = "Open clicked terminal file",
-  }
-)
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'markdown',
+  callback = function(args)
+    vim.keymap.set('n', '<C-LeftMouse>', '<LeftMouse>gF', {
+      buffer = args.buf,
+      remap = true,
+      silent = true,
+      desc = 'Open clicked file',
+    })
+  end,
+})
 
 require('kotlin-docs').setup()
+-- Ctrl-click while actively using the terminal
+vim.keymap.set('t', '<C-LeftMouse>', [[<C-\><C-n><LeftMouse>gF]], {
+  remap = true,
+  silent = true,
+  desc = 'Open clicked terminal file',
+})
+vim.api.nvim_create_autocmd('TermOpen', {
+  callback = function(args)
+    vim.keymap.set('n', '<C-LeftMouse>', '<LeftMouse>gF', {
+      buffer = args.buf,
+      remap = true,
+      silent = true,
+      desc = 'Open clicked terminal file',
+    })
+    vim.keymap.set('t', '<C-LeftMouse>', [[<C-\><C-n><LeftMouse>gF]], {
+      buffer = args.buf,
+      remap = true,
+      silent = true,
+      desc = 'Open clicked terminal file',
+    })
+  end,
+})

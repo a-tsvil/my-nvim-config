@@ -57,7 +57,8 @@ vim.lsp.config('gopls', {
 })
 -- vim.lsp.enable('gopls')
 
--- vim.lsp.enable('terraformls')
+vim.lsp.enable('terraform')
+vim.lsp.enable('terraformls')
 
 vim.lsp.enable('eslint')
 
@@ -201,11 +202,6 @@ end
 vim.g.kotlin_lsp_enable_semantic_tokens = vim.g.kotlin_lsp_enable_semantic_tokens == true
 
 vim.lsp.config('kotlin_lsp', {
-  -- Temporary standalone release; remove cmd to use Mason again.
-  cmd = {
-    vim.fn.stdpath('config') .. '/.local/kotlin-lsp/kotlin-server-263.6379.0/bin/intellij-server',
-    '--stdio',
-  },
   capabilities = kotlin_capabilities,
   flags = {
     -- Reduce request churn during fast typing; helps with stale completion sessions.
@@ -230,7 +226,6 @@ vim.lsp.config('kotlin_lsp', {
     'build.gradle',
     'build.gradle.kts',
     'workspace.json',
-    '.git',
   },
   on_attach = function(client, bufnr)
     require('kotlin-docs').attach(client, bufnr)
@@ -433,6 +428,5 @@ vim.filetype.add {
 }
 
 vim.lsp.enable('vacuum')
-
 
 vim.lsp.enable('ols')
