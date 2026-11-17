@@ -82,6 +82,7 @@ Plug('rcarriga/nvim-notify')
 Plug('mfussenegger/nvim-lint')
 
 Plug('HawkinsT/pathfinder.nvim')
+Plug('a-tsvil/clarify.nvim')
 
 vim.fn['plug#end']()
 
