@@ -20,7 +20,7 @@ vim.opt.equalalways = false
 vim.opt.termguicolors = true
 
 -- Color scheme
-vim.cmd('colorscheme kanagawa')
+vim.cmd('colorscheme kanagawa-dragon')
 -- vim.cmd('colorscheme everforest')
 vim.api.nvim_set_hl(0, 'Visual', { reverse = true })
 vim.g.nord_contrast = false
