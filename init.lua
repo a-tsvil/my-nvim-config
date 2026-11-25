@@ -84,6 +84,8 @@ Plug('mfussenegger/nvim-lint')
 Plug('HawkinsT/pathfinder.nvim')
 Plug('a-tsvil/clarify.nvim')
 
+Plug('zion-off/mole.nvim')
+
 vim.fn['plug#end']()
 
 vim.api.nvim_create_autocmd('VimEnter', {

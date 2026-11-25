@@ -479,7 +479,7 @@ vim.keymap.set('n', '<leader>tti', '<cmd>tabe | term<CR>i')
 vim.keymap.set('n', '<leader>tsi', '<cmd>vs | term<CR>i')
 vim.keymap.set('n', '<leader>tsc', '<cmd>vs | term<CR>i codex <CR>')
 
-require('noice').setup({
+local noice_opts = {
   markdown = {
     hover = {
       ['%[.-%]%((%S-)%)'] = function(url)
@@ -503,7 +503,18 @@ require('noice').setup({
     inc_rename = false, -- enables an input dialog for inc-rename.nvim
     lsp_doc_border = false, -- add a border to hover docs and signature help
   },
-})
+}
+
+local function setup_noice()
+  require('noice').setup(noice_opts)
+end
+
+if vim.g.neovide then
+  -- Let Neovide release its temporary startup message UI before Noice checks it.
+  vim.defer_fn(setup_noice, 500)
+else
+  setup_noice()
+end
 require('noice-markdown-fences').setup()
 
 vim.opt.mouse = 'a'
@@ -575,3 +586,4 @@ require('clarify').setup({
   -- anthropic_api_key = '...',
 })
 
+require("mole").setup({})
